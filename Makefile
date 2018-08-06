@@ -6,7 +6,7 @@
 #    By: piquerue <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/02 14:20:07 by piquerue          #+#    #+#              #
-#    Updated: 2018/08/06 07:07:12 by piquerue         ###   ########.fr        #
+#    Updated: 2018/08/06 07:13:01 by piquerue         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ H = Include/ft_corewar.h Include/op.h
 O = $(C:%.c=%.o)
 T = 0
 INC = -I $(LIBFT)/$(INCLUDE) -I $(INCLUDE)
-.PHONY : all clean fclean re
+
+.PHONY : all clean fclean re libfclean libclean $(LIBFT)
 
 all: $(NAME)
 
@@ -34,13 +35,20 @@ $(LIBFT):
 	$(call plus,$(COUNT), 1)
 	@printf "\033[1A\033[KCompiling Source \033[32m%d\033[37m / \033[31m%d\033[37m\n" $(COUNT) $(COUNT_MAX)
 
-$(NAME): libft check display $(O)
+$(NAME): $(LIBFT) check display $(O)
 	@gcc -o $(NAME) $(O) $(INC) $(LIBFT)/libft.a
 	@printf "\033[1A\033[KCompiling Project \033[33m%s\033[37m\n" $(NAME)
 
-clean: display
+libclean:
+	@make -C $(LIBFT) clean
+
+clean: libclean display
 	@rm -rf $(O)
-fclean: clean
+
+libfclean:
+	@make -C $(LIBFT) fclean
+
+fclean: libfclean clean
 	@rm -f $(NAME)
 
 re: fclean all

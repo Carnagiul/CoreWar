@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_log_del.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/06 06:55:28 by piquerue         ###   ########.fr       */
+/*   Created: 2018/08/06 02:44:42 by piquerue          #+#    #+#             */
+/*   Updated: 2018/08/06 02:46:30 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_corewar.h>
+#include <libft.h>
 
-int		main(void)
+void			ft_log_del(t_log *log)
 {
-	t_log	*log;
-
-	log = ft_log_create("test", 17, 0, "Coin");
-	ft_log_display(log);
-	return (0);
+	free(log->file);
+	free(log->msg);
+	free(log->content);
+	free(log);
 }

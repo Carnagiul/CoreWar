@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_corewar.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/06 06:55:28 by piquerue         ###   ########.fr       */
+/*   Created: 2018/08/06 02:16:06 by piquerue          #+#    #+#             */
+/*   Updated: 2018/08/06 06:52:40 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_corewar.h>
+#ifndef FT_COREWAR_H
+# define FT_COREWAR_H
 
-int		main(void)
+# include <libft.h>
+# include "op.h"
+
+typedef struct		s_op
 {
-	t_log	*log;
+	char			*name;
+	char			n_params;
+	t_char			params[MAX_ARGS_NUMBER];
+	char			n;
+	t_uint			cycles;
+	char			*comment;
+	char			mask;
+	char			modif;
+}					t_op;
 
-	log = ft_log_create("test", 17, 0, "Coin");
-	ft_log_display(log);
-	return (0);
-}
+#endif

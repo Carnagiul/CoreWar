@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_log_insert.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/06 06:55:28 by piquerue         ###   ########.fr       */
+/*   Created: 2018/08/06 06:17:28 by piquerue          #+#    #+#             */
+/*   Updated: 2018/08/06 06:17:35 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_corewar.h>
+#include <libft.h>
 
-int		main(void)
+t_log		**ft_log_insert(t_log *log, t_log **old)
 {
-	t_log	*log;
+	static int			i = 0;
+	t_log				**mem;
 
-	log = ft_log_create("test", 17, 0, "Coin");
-	ft_log_display(log);
-	return (0);
+	mem = ft_log_get(old);
+	mem = ft_realloc(mem, sizeof(t_log *) * (i + 1));
+	mem[i++] = log;
+	ft_log_get(mem);
+	return (ft_log_get(mem));
 }

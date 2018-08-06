@@ -6,37 +6,32 @@
 #    By: piquerue <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/02 14:20:07 by piquerue          #+#    #+#              #
-#    Updated: 2018/08/06 06:57:56 by piquerue         ###   ########.fr        #
+#    Updated: 2018/08/06 06:49:07 by piquerue         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = core_war
+NAME = libft.a
 
-LIBFT = libft
 CFLAGS = -Wall -Werror -Wextra -Ofast -Wunreachable-code
-INCLUDE = Include
-C = corewar/op.c main.c
+LIBFT = libft
+C = $(shell find . -type f | grep "\.c")
 COUNT = $(shell find . -type f | grep "\.o" | wc -l)
-COUNT_MAX = 1
-H = Include/ft_corewar.h Include/op.h
+COUNT_MAX = $(shell find . -type f | grep "\.c" | wc -l)
+H = $(shell find . -type f | grep "\.h")
 O = $(C:%.c=%.o)
 T = 0
-INC = -I $(LIBFT)/$(INCLUDE) -I $(INCLUDE)
-.PHONY : all clean fclean re
-
-all: $(NAME)
-
-$(LIBFT):
-	make -C $(LIBFT)
 
 %.o: %.c $(H)
-	@gcc $(CFLAGS) $(INC) -o $@ -c $<
+	@gcc $(CFLAGS) -I Include/ -o $@ -c $<
 	$(call plus,$(COUNT), 1)
 	@printf "\033[1A\033[KCompiling Source \033[32m%d\033[37m / \033[31m%d\033[37m\n" $(COUNT) $(COUNT_MAX)
 
-$(NAME): libft check display $(O)
-	@gcc -o $(NAME) $(O) $(INC) $(LIBFT)/libft.a
+$(NAME): check display $(O)
+	@ar rc $(NAME) $(O)
+	@ranlib $(NAME)
 	@printf "\033[1A\033[KCompiling Project \033[33m%s\033[37m\n" $(NAME)
+
+all: $(NAME)
 
 clean: display
 	@rm -rf $(O)
@@ -61,6 +56,7 @@ music_end:
 	@say -v thomas Fin de la compilation Merci d\'avoir patienter
 	@killall afplay
 
+.PHONY : all clean fclean re $(NAME)
 
 
 

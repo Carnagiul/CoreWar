@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_log_get.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/06 06:55:28 by piquerue         ###   ########.fr       */
+/*   Created: 2018/08/06 05:10:04 by piquerue          #+#    #+#             */
+/*   Updated: 2018/08/06 06:16:32 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_corewar.h>
+#include <libft.h>
 
-int		main(void)
+t_log		**ft_log_get(t_log **mem)
 {
-	t_log	*log;
+	static t_log	**log = NULL;
 
-	log = ft_log_create("test", 17, 0, "Coin");
-	ft_log_display(log);
-	return (0);
+	log = mem;
+	return (log);
 }

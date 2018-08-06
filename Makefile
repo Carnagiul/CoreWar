@@ -6,13 +6,13 @@
 #    By: piquerue <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/02 14:20:07 by piquerue          #+#    #+#              #
-#    Updated: 2018/08/06 06:57:56 by piquerue         ###   ########.fr        #
+#    Updated: 2018/08/06 07:06:04 by piquerue         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = core_war
 
-LIBFT = libft
+LIBFT = libft42
 CFLAGS = -Wall -Werror -Wextra -Ofast -Wunreachable-code
 INCLUDE = Include
 C = corewar/op.c main.c

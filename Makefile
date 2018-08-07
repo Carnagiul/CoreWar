@@ -6,11 +6,12 @@
 #    By: piquerue <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/02 14:20:07 by piquerue          #+#    #+#              #
-#    Updated: 2018/08/06 07:13:01 by piquerue         ###   ########.fr        #
+#    Updated: 2018/08/07 05:08:13 by piquerue         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = core_war
+NAME2 = asm
 
 LIBFT = libft
 CFLAGS = -Wall -Werror -Wextra -Ofast -Wunreachable-code
@@ -37,6 +38,7 @@ $(LIBFT):
 
 $(NAME): $(LIBFT) check display $(O)
 	@gcc -o $(NAME) $(O) $(INC) $(LIBFT)/libft.a
+	@cp $(NAME) $(NAME2)
 	@printf "\033[1A\033[KCompiling Project \033[33m%s\033[37m\n" $(NAME)
 
 libclean:

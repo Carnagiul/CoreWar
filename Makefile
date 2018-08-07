@@ -6,7 +6,7 @@
 #    By: piquerue <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/02 14:20:07 by piquerue          #+#    #+#              #
-#    Updated: 2018/08/07 05:08:13 by piquerue         ###   ########.fr        #
+#    Updated: 2018/08/07 06:42:18 by piquerue         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ libfclean:
 	@make -C $(LIBFT) fclean
 
 fclean: libfclean clean
-	@rm -f $(NAME)
+	@rm -f $(NAME) $(NAME2)
 
 re: fclean all
 

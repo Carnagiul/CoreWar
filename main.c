@@ -6,7 +6,7 @@
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/07 06:38:20 by piquerue         ###   ########.fr       */
+/*   Updated: 2018/08/07 07:32:01 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,36 +21,32 @@ typedef struct		s_asm
 
 static int	read_write_champ_header_name(char *line, t_asm *fasm)
 {
-	char		**tab;
-	int			i;
 	int			error;
 
 	error = 0;
-	tab = ft_strsplitwhitespace(line);
-	i = 0;
-	while (tab[i] && i <= 3)
-		i++;
-	if (i != 2)
+	if (ft_strncmp(line, ".name", 5) != 0)
 		error = 1;
+	error += ft_strsplit_regex_exist(line, '"');
 	if (error == 0)
-		if (ft_strcmp(tab[0], ".name") != 0 || ft_strlen(tab[1]) <= 2)
-			error = 1;
-	i = -1;
-	while (tab[1][++i] && error == 0)
-		if (((i == 0 || (i + 1) == (int)ft_strlen(tab[1])) &&
-					tab[1][i] != '"') || (ft_isalnum(tab[1][i]) == 0))
-			error = 1;
-	if (error == 0)
-		fasm->name = ft_strdup_from_to(tab[1], 1, ft_strlen(tab[1]) - 2);
-	free_char_ss(tab);
+		fasm->name = ft_strsplit_regex(line, '"');
+	else
+		fasm->name = NULL;
 	return ((error == 1) ? 0x4 : 0);
 }
 
 static int	read_write_champ_header_comment(char *line, t_asm *fasm)
 {
-	(void)line;
-	(void)fasm;
-	return (0);
+	int			error;
+
+	error = 0;
+	if (ft_strncmp(line, ".comment", 5) != 0)
+		error = 1;
+	error += ft_strsplit_regex_exist(line, '"');
+	if (error == 0)
+		fasm->comment = ft_strsplit_regex(line, '"');
+	else
+		fasm->comment = NULL;
+	return ((error == 1) ? 0x4 : 0);
 }
 
 static int	read_write_champ_header(char **lines, t_asm *fasm)
@@ -76,8 +72,13 @@ static void	read_write_champ(char **lines, char *name)
 	fasm = ft_malloc(sizeof(*fasm));
 	fasm->filename = ft_strdup_from_to_offset(name, 0, ft_strlen(name) - 1, 3);
 	ft_strcat(fasm->filename, "cor");
-	ft_printf("new name is %s\n", fasm->filename);
 	read_write_champ_header(lines, fasm);
+	if (fasm->filename)
+		ft_printf("new name is %s\n", fasm->filename);
+	if (fasm->name)
+		ft_printf(".name of assembleur is %s\n", fasm->name);
+	if (fasm->comment)
+		ft_printf(".comment of assembleur is %s\n", fasm->comment);
 	(void)lines;
 	(void)name;
 }

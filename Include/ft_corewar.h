@@ -21,11 +21,21 @@ typedef struct		s_op
 	char			*name;
 	char			n_params;
 	t_char			params[MAX_ARGS_NUMBER];
-	char			n;
+	char			op_code;
 	t_uint			cycles;
 	char			*comment;
 	char			mask;
 	char			modif;
 }					t_op;
+
+/*
+** mask == presence d'un octet de codage des parametre
+** modif == modification du karry
+** op_code == ID
+** params == Les types d'arguments
+** (T_DIR) == Direct
+** (T_IND) == Indirect
+** (T_REG) == Registre
+**/
 
 #endif

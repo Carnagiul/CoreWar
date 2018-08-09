@@ -6,7 +6,7 @@
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/07 07:32:01 by piquerue         ###   ########.fr       */
+/*   Updated: 2018/08/09 09:39:45 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,18 @@ typedef struct		s_asm
 static int	read_write_champ_header_name(char *line, t_asm *fasm)
 {
 	int			error;
+	char		*name;
 
 	error = 0;
-	if (ft_strncmp(line, ".name", 5) != 0)
+	if (ft_strncmp(line, NAME_CMD_STRING, 5) != 0)
 		error = 1;
 	error += ft_strsplit_regex_exist(line, '"');
 	if (error == 0)
-		fasm->name = ft_strsplit_regex(line, '"');
+	{
+		name = ft_strsplit_regex(line, '"');
+		if (ft_strlen(name) <= PROG_NAME_LENGTH)
+			fasm->name = name;
+	}
 	else
 		fasm->name = NULL;
 	return ((error == 1) ? 0x4 : 0);
@@ -37,57 +42,86 @@ static int	read_write_champ_header_name(char *line, t_asm *fasm)
 static int	read_write_champ_header_comment(char *line, t_asm *fasm)
 {
 	int			error;
+	char		*comment;
 
 	error = 0;
-	if (ft_strncmp(line, ".comment", 5) != 0)
+	if (ft_strncmp(line, COMMENT_CMD_STRING, 5) != 0)
 		error = 1;
 	error += ft_strsplit_regex_exist(line, '"');
 	if (error == 0)
-		fasm->comment = ft_strsplit_regex(line, '"');
+	{
+		comment = ft_strsplit_regex(line, '"');
+		if (ft_strlen(comment) <= COMMENT_LENGTH)
+			fasm->comment = comment;
+		else
+			return (0x6);
+	}
 	else
 		fasm->comment = NULL;
 	return ((error == 1) ? 0x4 : 0);
 }
 
-static int	read_write_champ_header(char **lines, t_asm *fasm)
+static int	read_write_champ_header(int fd, t_asm *fasm)
 {
+	char	*gnl;
 	int		ret;
-	int		ret2;
+	int		id;
 
-	if (!(lines[0]))
-		return (0x4);
-	ret = read_write_champ_header_name(lines[0], fasm);
-	if (!(lines[1]))
-		return (0x5);
-	ret2 = read_write_champ_header_comment(lines[1], fasm);
-	if (ret != 0)
-		return (ret);
-	return (ret2);
+	id = 0;
+	while (get_next_line(fd, &gnl) == 1)
+	{
+		ret = 0;
+		if (gnl[0] != COMMENT_CHAR)
+		{
+			if (id == 0)
+				ret = read_write_champ_header_name(gnl, fasm);
+			else
+				ret = read_write_champ_header_comment(gnl, fasm);
+			id++;
+		}
+		ft_strdel(&gnl);
+		if (ret > 0)
+			return (ret);
+		if (ret == 0 && id == 2)
+			return (0);
+	}
+	return (0x4);
 }
 
-static void	read_write_champ(char **lines, char *name)
+static int	read_write_champ_byte(int fd, t_asm *fasm)
+{
+	char		*gnl;
+
+	while (get_next_line(fd, &gnl) == 1)
+	{
+		if (gnl[0] != COMMENT_CHAR)
+		{
+
+		}
+	}
+	(void)fd;
+	(void)fasm;
+	return (0);
+}
+
+static int	read_write_champ(int fd, char *name)
 {
 	t_asm	*fasm;
+	int		ret;
 
 	fasm = ft_malloc(sizeof(*fasm));
 	fasm->filename = ft_strdup_from_to_offset(name, 0, ft_strlen(name) - 1, 3);
 	ft_strcat(fasm->filename, "cor");
-	read_write_champ_header(lines, fasm);
-	if (fasm->filename)
-		ft_printf("new name is %s\n", fasm->filename);
-	if (fasm->name)
-		ft_printf(".name of assembleur is %s\n", fasm->name);
-	if (fasm->comment)
-		ft_printf(".comment of assembleur is %s\n", fasm->comment);
-	(void)lines;
-	(void)name;
+	if ((ret = read_write_champ_header(fd, fasm)) != 0)
+		return (ret);
+	if ((ret = read_write_champ_byte(fd, fasm)) != 0)
+		return (ret);
+	return (0);
 }
 
 static int	create_champion(int fd, char *file)
 {
 	char	*extension;
-	char	*contents;
-	char	**lines;
 
 	if ((extension = ft_get_extension(file)) == NULL)
 		return (0x3);
@@ -97,11 +131,7 @@ static int	create_champion(int fd, char *file)
 		return (0x2);
 	}
 	free(extension);
-	contents = ft_get_content_file_fd(fd);
-	lines = ft_strsplit(contents, '\n');
-	read_write_champ(lines, file);
-	free_char_ss(lines);
-	free(contents);
+	read_write_champ(fd, file);
 	return (0x0);
 }
 
@@ -118,6 +148,8 @@ static int	do_asm(int argc, char **argv)
 
 static int	do_display_error_asm(int error)
 {
+	if (error == 0x0)
+		ft_printf("@GLe Programme c'est execute correctement@@\n");
 	if (error == 0x1)
 		ft_printf("usage ; ./asm <filename.s>\n");
 	if (error == 0x2)
@@ -128,6 +160,10 @@ static int	do_display_error_asm(int error)
 		ft_printf("\n@RWrong parsing on file with\n.name must be on top of file like :\n@B.name       \"my name\"@@\n");
 	if (error == 0x5)
 		ft_printf("\n@RWrong parsing on file with\n.name must be on second line of file like :\n@B.comment       \"my descr\"@@\n");
+	if (error == 0x6)
+		ft_printf("\n@RWrong parsing on file with\n.comment must be <= strlen(2048)@@\n");
+	if (error == 0x7)
+		ft_printf("\n@RWrong parsing on file with\n.name must be <= strlen(128)@@\n");
 	return (error);
 }
 
@@ -148,7 +184,5 @@ int		main(int argc, char **argv)
 	else if (ft_strcmp(argv[0], "./corewar") == 0)
 		result = do_vm(argc, argv);
 	do_display_error_asm(result);
-	while (1)
-		;
 	return (result);
 }

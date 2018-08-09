@@ -6,7 +6,7 @@
 /*   By: piquerue <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/06 06:54:32 by piquerue          #+#    #+#             */
-/*   Updated: 2018/08/09 09:39:45 by piquerue         ###   ########.fr       */
+/*   Updated: 2018/08/09 11:28:30 by piquerue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@ typedef struct		s_asm
 	char			*name;
 	char			*comment;
 }					t_asm;
+
+typedef struct		s_byte
+{
+	int				value;
+	int				weight;
+	int				op_id;
+	char			*label;
+	struct s_byte	*next;
+}					t_byte;
 
 static int	read_write_champ_header_name(char *line, t_asm *fasm)
 {
@@ -88,19 +97,127 @@ static int	read_write_champ_header(int fd, t_asm *fasm)
 	return (0x4);
 }
 
+static t_byte	*add_label(char *line, int min, int max)
+{
+	t_byte	*byte;
+
+	ft_printf("passage pour line %s\n", line);
+	byte = ft_malloc(sizeof(t_byte));
+	byte->label = ft_strdup_from_to(line, min, max);
+	byte->value = 1;
+	byte->weight = 1;
+	byte->op_id = 0;
+	byte->next = NULL;
+	return (byte);
+}
+
+static void	add_mutex(void)
+{
+	return ;
+}
+
+static void	add_direct(void)
+{
+	return ;
+}
+
+static int	is_label_chars(int c)
+{
+	int		i;
+
+	i = -1;
+	while (LABEL_CHARS[++i])
+		if (LABEL_CHARS[i] == c)
+			return (1);
+	return (0);
+}
+
+static t_byte	*asm_champ_find_label(char *line)
+{
+	int		i;
+	int		j;
+	t_byte	*a;
+	t_byte	**mem;
+
+	i = 0;
+	a = NULL;
+	mem = &a;
+	while (line[i])
+	{
+		while (ft_char_iswhitespaces(line[i]) == 1)
+			i++;
+		j = i;
+		while (is_label_chars(line[i]) == 1)
+			i++;
+		if (line[i] && line[i] == LABEL_CHAR)
+		{
+			if (a != NULL)
+				a->next = add_label(line, j, i);
+			else
+			{
+				a = add_label(line, j, i);
+				mem = &a;
+			}
+		}
+		if (line[i] && line[i] == SEPARATOR_CHAR)
+			add_mutex();
+		if (line[i] && line[i] == DIRECT_CHAR)
+			add_direct();
+		if (a)
+			while (a->next != NULL)
+				a = a->next;
+		i++;
+	}
+	return ((a != NULL) ? *mem : NULL);
+}
+
 static int	read_write_champ_byte(int fd, t_asm *fasm)
 {
 	char		*gnl;
+	t_byte		*byte;
+	t_byte		**mem;
+	t_byte		*result;
 
+	byte = NULL;
 	while (get_next_line(fd, &gnl) == 1)
 	{
+		result = NULL;
 		if (gnl[0] != COMMENT_CHAR)
 		{
-
+			result = asm_champ_find_label(gnl);
+			if (result)
+			{
+				if (byte)
+				{
+					byte->next = result;
+					while (byte->next != NULL)
+						byte = byte->next;
+					ft_printf("N group of label found and save\n");
+				}
+				else
+				{
+					ft_printf("first group of label found and save\n");
+					byte = asm_champ_find_label(gnl);
+					mem = &byte;
+					while (byte->next != NULL)
+						byte = byte->next;
+				}
+			}
+		}
+		ft_strdel(&gnl);
+	}
+	if (byte)
+	{
+		result = *mem;
+		while (result)
+		{
+			ft_printf("LABEL %s FOUND\n", result->label);
+			result = result->next;
 		}
 	}
-	(void)fd;
-	(void)fasm;
+	while (1)
+		;
+	ft_printf("%s\n", fasm->filename);
 	return (0);
 }
 
@@ -184,5 +301,7 @@ int		main(int argc, char **argv)
 	else if (ft_strcmp(argv[0], "./corewar") == 0)
 		result = do_vm(argc, argv);
 	do_display_error_asm(result);
+	while (1)
+		;
 	return (result);
 }

@@ -101,14 +101,29 @@ static t_byte	*add_label(char *line, int min, int max)
 {
 	t_byte	*byte;
 
-	ft_printf("passage pour line %s\n", line);
 	byte = ft_malloc(sizeof(t_byte));
 	byte->label = ft_strdup_from_to(line, min, max);
+	ft_printf("LBAEL : %s\n", byte->label);
 	byte->value = 1;
 	byte->weight = 1;
 	byte->op_id = 0;
 	byte->next = NULL;
 	return (byte);
+}
+
+static void	pb_byte(t_byte **mem, t_byte *set)
+{
+	t_byte	*lst;
+
+	lst = *mem;
+	if (lst)
+	{
+		while (lst->next)
+			lst = lst->next;
+		lst->next = set;
+	}
+	else
+		mem = &set;
 }
 
 static void	add_mutex(void)
@@ -141,7 +156,6 @@ static t_byte	*asm_champ_find_label(char *line)
 
 	i = 0;
 	a = NULL;
-	mem = &a;
 	while (line[i])
 	{
 		while (ft_char_iswhitespaces(line[i]) == 1)
@@ -151,24 +165,15 @@ static t_byte	*asm_champ_find_label(char *line)
 			i++;
 		if (line[i] && line[i] == LABEL_CHAR)
 		{
-			if (a != NULL)
-				a->next = add_label(line, j, i);
-			else
-			{
-				a = add_label(line, j, i);
-				mem = &a;
-			}
+			pb_byte(&a, add_label(line, j, i));
 		}
 		if (line[i] && line[i] == SEPARATOR_CHAR)
 			add_mutex();
 		if (line[i] && line[i] == DIRECT_CHAR)
 			add_direct();
-		if (a)
-			while (a->next != NULL)
-				a = a->next;
 		i++;
 	}
-	return ((a != NULL) ? *mem : NULL);
+	return ((a != NULL) ? a : NULL);
 }
 
 static int	read_write_champ_byte(int fd, t_asm *fasm)
@@ -185,39 +190,14 @@ static int	read_write_champ_byte(int fd, t_asm *fasm)
 		if (gnl[0] != COMMENT_CHAR)
 		{
 			result = asm_champ_find_label(gnl);
-			if (result)
+			if (result != NULL)
 			{
-				if (byte)
-				{
-					byte->next = result;
-					while (byte->next != NULL)
-						byte = byte->next;
-					ft_printf("N group of label found and save\n");
-				}
-				else
-				{
-					ft_printf("first group of label found and save\n");
-					byte = asm_champ_find_label(gnl);
-					mem = &byte;
-					while (byte->next != NULL)
-						byte = byte->next;
-				}
+				pb_byte(&byte, result);
 			}
 		}
+		result = NULL;
 		ft_strdel(&gnl);
 	}
-	if (byte)
-	{
-		result = *mem;
-		while (result)
-		{
-			ft_printf("LABEL %s FOUND\n", result->label);
-			result = result->next;
-		}
-	}
-	while (1)
-		;
-	ft_printf("%s\n", fasm->filename);
 	return (0);
 }
 
@@ -301,7 +281,5 @@ int		main(int argc, char **argv)
 	else if (ft_strcmp(argv[0], "./corewar") == 0)
 		result = do_vm(argc, argv);
 	do_display_error_asm(result);
-	while (1)
-		;
 	return (result);
 }

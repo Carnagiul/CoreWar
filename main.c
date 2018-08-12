@@ -7,6 +7,12 @@ typedef struct	s_sdl_win
 	char		*title;
 }				t_sdl_win;
 
+typedef struct		s_champions
+{
+	t_header		header;
+	int				fd;
+}					t_champions;
+
 typedef struct	s_core_env
 {
 	struct s_sdl_win	*win;
@@ -16,7 +22,19 @@ typedef struct	s_core_env
 	int					champ_id;
 	int					fd[4];
 	int					error;
+	struct s_champions	champions[4];
 }				t_core_env;
+
+int			bendian(int n)
+{
+	int		r;
+
+	r = (n & 0xFF000000) / 0x1000000;
+	r += (n & 0xFF0000) / 0x100;
+	r += (n & 0xFF00) * 0x100;
+	r += (n & 0xFF) * 0x10000;
+	return (r);
+}
 
 void		set_win_width(char *argv, t_sdl_win *ptr)
 {
@@ -145,6 +163,8 @@ int		ft_core_error(t_core_env *env)
 		lst = ft_log_create("main.c", 144, 2, "Erreur lors de l'ouverture du fichier. Il semblerait qu'il soit inexistant ou que l'on a pas les droits dessus...\n");
 	if (env->error == 2)
 		lst = ft_log_create("main.c", 144, 2, "Il semblerait que l'un des fichiers ne soit pas un fichier .cor...\n");
+	if (env->error == 3)
+		lst = ft_log_create("main.c", 144, 2, "Il semblerait que l'un des fichiers ne soit pas un fichier .cor...\n");
 	id = 0;
 	while (id < env->champ_id)
 	{
@@ -162,6 +182,27 @@ int		ft_core_error(t_core_env *env)
 	return (0);
 }
 
+int		verify_header_champion(t_core_env *env)
+{
+	t_champions	*champion[4];
+	int			i;
+	t_header	h;
+
+	i = 0;
+	while (i < env->champ_id)
+	{
+		if (read(env->fd[i], &h, sizeof(t_header)) < (long)sizeof(t_header))
+			return (2);
+		h.magic = bendian(h.magic);
+		h.prog_size = bendian(h.prog_size);
+		if (h.magic != COREWAR_EXEC_MAGIC)
+			return (2);
+		env->champions[i].fd = env->fd[i];
+		env->champions[i].header = h;
+	}
+	return (0);
+}
+
 int		main(int argc, char **argv)
 {
 	t_core_env	*env;
@@ -169,6 +210,14 @@ int		main(int argc, char **argv)
 	env = ft_init_env(argc, argv);
 	if (env->error > 0)
 		return (ft_core_error(env));
+	verify_header_champion(env);
+	for (int i = 0; i < env->champ_id; i++)
+	{
+		ft_printf("NEW CHAMPION LOAD :: \n");
+		ft_printf("CHAMP NAME :: %s\n", env->champions[i].header.prog_name);
+		ft_printf("CHAMP COMMENT :: %s\n", env->champions[i].header.comment);
+		ft_printf("CHAMP SIZE :: %u\n", env->champions[i].header.prog_size);
+	}
 	while (1)
 		;
 	return (0);

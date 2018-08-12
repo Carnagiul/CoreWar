@@ -197,6 +197,8 @@ int		verify_header_champion(t_core_env *env)
 		h.prog_size = bendian(h.prog_size);
 		if (h.magic != COREWAR_EXEC_MAGIC)
 			return (2);
+		if (h,prog_size > CHAMP_SIZE_MAX)
+			return (2);
 		env->champions[i].fd = env->fd[i];
 		env->champions[i].header = h;
 	}

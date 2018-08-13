@@ -26,9 +26,9 @@ typedef struct	s_core_env
 	int					dump;
 	int					debug;
 	int					champ_id;
-	int					fd[4];
+	int					fd[MAX_PLAYERS];
 	int					error;
-	struct s_champions	champions[4];
+	struct s_champions	champions[MAX_PLAYERS];
 }				t_core_env;
 
 int			bendian(int n)
@@ -157,6 +157,8 @@ t_core_env	*ft_init_env(int argc, char **argv)
 		env->win->h = 720;
 	if (env->win->w <= 0)
 		env->win->w = 1280;
+	if (env->champ_id <= 1)
+		env->error = 5;
 	return (env);
 }
 
@@ -171,6 +173,10 @@ int		ft_core_error(t_core_env *env)
 		lst = ft_log_create("main.c", 144, 2, "Il semblerait que l'un des fichiers ne soit pas un fichier .cor...\n");
 	if (env->error == 3)
 		lst = ft_log_create("main.c", 144, 2, "Il semblerait que l'un des fichiers ne soit pas un fichier .cor...\n");
+	if (env->error == 4)
+		lst = ft_log_create("main.c", 144, 2, "trop de fichier .cor...\n");
+	if (env->error == 5)
+		lst = ft_log_create("main.c", 144, 2, "Pas assez de champion declarer .cor files...\n");
 	id = 0;
 	while (id < env->champ_id)
 	{
@@ -183,8 +189,6 @@ int		ft_core_error(t_core_env *env)
 	free(env);
 	ft_log_display(lst);
 	ft_log_del(lst);
-	while (1)
-		;
 	return (0);
 }
 
@@ -207,7 +211,7 @@ int		verify_header_champion(t_core_env *env)
 	char		*prog;
 
 	i = 0;
-	while (i < env->champ_id)
+	while (i < env->champ_id && i < MAX_PLAYERS)
 	{
 		if (read(env->fd[i], &h, sizeof(t_header)) < (long)sizeof(t_header))
 			return (2);
@@ -222,8 +226,11 @@ int		verify_header_champion(t_core_env *env)
 		if (get_prog_content(&(env->champions[i]), env->fd[i]) != 0)
 			return (2);
 		close(env->fd[i]);
+		i++;
 	}
-	return (0);
+	if (i <= MAX_PLAYERS)
+		return (0);
+	return (4);
 }
 
 int		main(int argc, char **argv)
@@ -233,7 +240,9 @@ int		main(int argc, char **argv)
 	env = ft_init_env(argc, argv);
 	if (env->error > 0)
 		return (ft_core_error(env));
-	verify_header_champion(env);
+	env->error = verify_header_champion(env);
+	if (env->error > 0)
+		return (ft_core_error(env));
 	for (int i = 0; i < env->champ_id; i++)
 	{
 		ft_printf("NEW CHAMPION LOAD :: \n");

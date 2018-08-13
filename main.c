@@ -11,7 +11,13 @@ typedef struct		s_champions
 {
 	t_header		header;
 	int				fd;
+	char			*prog;
 }					t_champions;
+
+typedef struct	s_core_arena
+{
+	char		arene[MEM_SIZE];
+}				t_core_arena;
 
 typedef struct	s_core_env
 {
@@ -182,11 +188,23 @@ int		ft_core_error(t_core_env *env)
 	return (0);
 }
 
+int		get_prog_content(t_champions *c, int fd)
+{
+	char	prog[c->header.prog_size];
+
+	if (read(fd, &prog, c->header.prog_size) < c->header.prog_size)
+		return (2);
+	c->prog = ft_malloc(sizeof(unsigned char) * c->header.prog_size);
+	ft_memcpy(c->prog, prog, c->header.prog_size + 1);
+	return (0);
+}
+
 int		verify_header_champion(t_core_env *env)
 {
 	t_champions	*champion[4];
 	int			i;
 	t_header	h;
+	char		*prog;
 
 	i = 0;
 	while (i < env->champ_id)
@@ -197,10 +215,13 @@ int		verify_header_champion(t_core_env *env)
 		h.prog_size = bendian(h.prog_size);
 		if (h.magic != COREWAR_EXEC_MAGIC)
 			return (2);
-		if (h,prog_size > CHAMP_SIZE_MAX)
+		if (h.prog_size > CHAMP_MAX_SIZE)
 			return (2);
 		env->champions[i].fd = env->fd[i];
 		env->champions[i].header = h;
+		if (get_prog_content(&(env->champions[i]), env->fd[i]) != 0)
+			return (2);
+		close(env->fd[i]);
 	}
 	return (0);
 }

@@ -16,7 +16,7 @@ typedef struct		s_champions
 
 typedef struct	s_core_arena
 {
-	char		arene[MEM_SIZE];
+	unsigned char		arene[MEM_SIZE];
 }				t_core_arena;
 
 typedef struct	s_core_env
@@ -243,13 +243,6 @@ int		main(int argc, char **argv)
 	env->error = verify_header_champion(env);
 	if (env->error > 0)
 		return (ft_core_error(env));
-	for (int i = 0; i < env->champ_id; i++)
-	{
-		ft_printf("NEW CHAMPION LOAD :: \n");
-		ft_printf("CHAMP NAME :: %s\n", env->champions[i].header.prog_name);
-		ft_printf("CHAMP COMMENT :: %s\n", env->champions[i].header.comment);
-		ft_printf("CHAMP SIZE :: %u\n", env->champions[i].header.prog_size);
-	}
 	while (1)
 		;
 	return (0);

@@ -19,8 +19,29 @@ typedef struct	s_core_arena
 	unsigned char		arene[MEM_SIZE];
 }				t_core_arena;
 
+typedef struct	s_core_config
+{
+	int			cycle;
+	int			cycle_to_die;
+	int			last_player;
+	int			lives;
+	char		*arenes;
+	char		*sectors;
+	char		*pos;
+}				t_core_config;
+
+typedef struct	s_core_flags
+{
+	int			debug;
+	int			dump;
+	int			n;
+	int			flag;
+}				t_core_flags;
+
 typedef struct	s_core_env
 {
+	struct s_core_config	config;
+	struct s_core_flags		flag;
 	struct s_sdl_win	*win;
 	int					n;
 	int					dump;
@@ -116,11 +137,29 @@ int			insert_new_champion(char *file, t_core_env *env)
 	return (0);
 }
 
+void			ft_init_flags(t_core_flags	*flags)
+{
+	flags->debug = 0;
+	flags->dump = 0;
+	flags->n = 0;
+	flags->flag = 0;
+}
+
+void			ft_init_config(t_core_config	*config)
+{
+	config->cycle = 0;
+	config->cycle_to_die = CYCLE_TO_DIE;
+	config->last_player = MAC_PLAYERS;
+	config->lives = 0;
+}
+
 t_core_env	*ft_init_env(int argc, char **argv)
 {
-	t_core_env	*env;
-	int			i;
-	int			ret;
+	t_core_env		*env;
+	int				i;
+	int				ret;
+	t_core_game		game;
+	t_core_flags	flag;
 
 	env = ft_malloc(sizeof(t_core_env));
 	env->win = ft_malloc(sizeof(t_sdl_win));

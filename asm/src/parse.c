@@ -49,7 +49,7 @@ int		asm_instruction(char *line, t_asm *data)
 	{
 		j = 0;
 		if (i == 1)
-			j = label - line;
+			j = label + 1 - line;
 		while (line[j] && (line[j] == '\t' || line[j] == ' '))
 			++j;
 		i = line[j] == '\0' ? i : asm_checkcmd(line + j, data);

@@ -5,10 +5,10 @@ int		asm_checklabelarg(char *line, int start, t_op cmd, int nb_arg)
 	int	i;
 
 	i = 0;
-	while (ft_strchr(LABEL_CHARS, line[i]))
+	while (line[i] && ft_strchr(LABEL_CHARS, line[i]))
 		++i;
-	if (line[i] == SEPARATOR_CHAR || line[i] == '\t'
-		|| line[i] == ' ' || line[i] == '\0')
+	if (i != 0 && (line[i] == SEPARATOR_CHAR || line[i] == '\t'
+		|| line[i] == ' ' || line[i] == '\0'))
 		return (i + start);
 	return (-1);
 }

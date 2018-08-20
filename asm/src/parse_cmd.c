@@ -5,11 +5,9 @@ int		asm_checkvalidlabel(char *line, char *label)
 	int	i;
 
 	i = 0;
-	*label = '\0';
-	while (line[i] && ft_strchr(LABEL_CHARS, line[i]))
+	while (line[i] != LABEL_CHAR && ft_strchr(LABEL_CHARS, line[i]))
 		++i;
-	*label = LABEL_CHAR;
-	if (line[i] == LABEL_CHAR)
+	if (i != 0 && line[i] == LABEL_CHAR)
 		return (1);
 	return (-1);
 }

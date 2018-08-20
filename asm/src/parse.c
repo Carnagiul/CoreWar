@@ -53,35 +53,28 @@ int		asm_instruction(char *line, t_asm *data)
 	return (i);	
 }
 
-int	asm_check_new_line(char *nc, t_asm *data, int *error, int fd)
+int	asm_check_new_line(char *nc, t_asm *data, int *error)
 {
 	int	i;
 	int j;
 	int l;
+	int	err;
 
 	l = -1;
 	i = 0;
 	j = 0;
+	err = 0;
 	*error = NLINE;
 	if ((i = asm_header(nc, data, NAME_CMD_STRING, 1)) == -1)
-	{
-		ft_strdel(&nc);
-		return (-1);
-	}
+		err = -1;
 	*error = CLINE;
 	if (!i && (j = asm_header(nc, data, COMMENT_CMD_STRING, 2)) == -1)
-	{
-		ft_strdel(&nc);
-		return (-1);
-	}
+		err = -1;
 	*error = data->line_error;
 	if (!i && !j && asm_instruction(nc, data) == -1)
-	{
-		ft_strdel(&nc);
-		return (-1);
-	}
+		err = -1;
 	ft_strdel(&nc);
-	return (1);
+	return (err == -1 ? - 1 : 1);
 }
 
 int	asm_parse_file(int fd, t_asm *data, int *error)
@@ -101,7 +94,7 @@ int	asm_parse_file(int fd, t_asm *data, int *error)
 			ft_strdel(&line);
 			return (-1 + 0 * close(fd) * get_next_line(fd, &line));
 		}
-		if (asm_check_new_line(nc, data, error, fd) == -1)
+		if (asm_check_new_line(nc, data, error) == -1)
 		{
 			ft_strdel(&line);
 			return (-1 + 0 * close(fd) * get_next_line(fd, &line));

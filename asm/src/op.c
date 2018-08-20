@@ -54,7 +54,7 @@ t_op    op_tab[17] =
 		"long load index", 1, 1, 4},
 	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1, 5},
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0, 3},
-	{0, 0, {0}, 0, 0, 0, 0, 0}
+	{0, 0, {0}, 0, 0, 0, 0, 0, 0}
 };
 
 void	asm_get_optab(t_asm *data)

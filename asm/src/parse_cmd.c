@@ -33,27 +33,31 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 	i = 0;
 	j = 0;
 	err = 0;
-	while (i < data->op_tab[conv].n_arg && err == 0)
+	while (i < data->op_tab[conv].n_arg && err >= 0)
 	{
-		printf("line = %s\n", line);
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
+		if (line[j] == '\0' || (line[j] == SEPARATOR_CHAR && i == 0))
+			return (-1);
 		if (line[j] == SEPARATOR_CHAR && i != 0)
 			++j;
-		else if (line[j] == '\0' || (line[j] == SEPARATOR_CHAR && i == 0))
-			return (-1);
+		while (line[j] == '\t' || line[j] == ' ')
+			++j;
 		if (line[j] == 'r')
 			err = asm_checkreg(line + j, data->op_tab[conv], i);
 		else if (line[j] <= '9' && line[j] >= '0')
-			err = asm_checkreg(line + j, data->op_tab[conv], i);
+			err = asm_checkind(line + j, data->op_tab[conv], i);
 		else if (line[j] == DIRECT_CHAR)
-			err = asm_checkreg(line + j, data->op_tab[conv], i);
+			err = asm_checkdir(line + j, data->op_tab[conv], i);
 		else
 			err = -1;
+		if (err == -1)
+			i = data->op_tab[conv].n_arg + 1;
 		j = (err == -1 ? 0 : j + err);
 		if (err > 0)
 			while (line[j] && (line[j] == '\t' || line[j] == ' '))
 				++j;
+		++i;
 	}
 	return (err);
 }

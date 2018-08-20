@@ -2,6 +2,6 @@
 .comment " rff "		#;ewkf
 #.comment " rfrf "
 
-for r1 
+sti r1,4599,r3 
 
-#live
+live r1

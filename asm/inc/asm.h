@@ -77,11 +77,12 @@ char	*asm_removecomment(char *line);
 int		asm_checkvalidlabel(char *line, char *label);
 int		asm_checkcmd(char *line, t_asm *data);
 int		asm_checklabel(char *line, char *label, t_asm *data);
-int		asm_check_new_line(char *nc, t_asm *data, int *error, int fd);
+int		asm_check_new_line(char *nc, t_asm *data, int *error);
 
 int		asm_checkargument(char *s, t_asm *data, int conv);
 int		asm_checkreg(char *line, t_op cmd, int nb_arg);
-
+int		asm_checkind(char *line, t_op cmd, int nb_arg);
+int		asm_checkdir(char *line, t_op cmd, int nb_arg);
 
 
 

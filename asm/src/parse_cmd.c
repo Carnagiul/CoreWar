@@ -29,37 +29,40 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 	int	i;
 	int	j;
 	int err;
+	int	count_sep_char;
 
 	i = 0;
 	j = 0;
 	err = 0;
-	while (i < data->op_tab[conv].n_arg && err >= 0)
+	count_sep_char = 0;
+	while (line[j] && err >= 0 && i < data->op_tab[conv].n_arg)
 	{
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
-		if (line[j] == '\0' || (line[j] == SEPARATOR_CHAR && i == 0))
+		if (i == 0 && line[j] == SEPARATOR_CHAR)
 			return (-1);
-		if (line[j] == SEPARATOR_CHAR && i != 0)
-			++j;
+		if (line[j] == SEPARATOR_CHAR)
+			j += 1 + 0 * ++count_sep_char;
+		if (count_sep_char >= data->op_tab[conv].n_arg)
+			return (-1);
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
+		printf("j = %c\t", line[j]);
 		if (line[j] == 'r')
 			err = asm_checkreg(line + j, data->op_tab[conv], i);
-		else if (line[j] <= '9' && line[j] >= '0')
+		else if ((line[j] <= '9' && line[j] >= '0') || line[j] == LABEL_CHAR)
 			err = asm_checkind(line + j, data->op_tab[conv], i);
 		else if (line[j] == DIRECT_CHAR)
 			err = asm_checkdir(line + j, data->op_tab[conv], i);
 		else
 			err = -1;
-		if (err == -1)
-			i = data->op_tab[conv].n_arg + 1;
 		j = (err == -1 ? 0 : j + err);
 		if (err > 0)
 			while (line[j] && (line[j] == '\t' || line[j] == ' '))
 				++j;
 		++i;
 	}
-	return (err);
+	return (line[j] == '\0' ? err : -1);
 }
 
 int		asm_checkcmd(char *line, t_asm *data)

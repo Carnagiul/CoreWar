@@ -21,7 +21,8 @@ data.c\
 op.c\
 parse.c\
 parse_cmd.c\
-check_arguments.c
+check_arguments.c\
+asm_list.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_PATH = ./inc/\

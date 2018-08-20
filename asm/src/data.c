@@ -52,6 +52,7 @@ t_asm	*asm_init_data(void)
 	data->lname = ft_strlen(NAME_CMD_STRING);
 	data->lcom = ft_strlen(COMMENT_CMD_STRING);
 	data->line_error = 0;
+	data->lst = NULL;
 	asm_get_optab(data);
 	return (data);
 }

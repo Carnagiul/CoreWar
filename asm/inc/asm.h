@@ -6,6 +6,7 @@
 # include <fcntl.h>
 # include <op.h>
 # include <stdint.h>
+# include <stdio.h>
 
 # define ENTRY 0
 # define FORMAT 1
@@ -32,7 +33,7 @@ struct	s_op
 
 typedef struct s_op t_op;*/
 
-typedef struct					s_op
+typedef struct		s_op
 {
 	const char		*cmd;
 	uint8_t			n_arg;
@@ -72,5 +73,16 @@ int		asm_header(char *line, t_asm *data, char *type, int toto);
 int		asm_instruction(char *line, t_asm *data);
 int		asm_parse_file(int fd, t_asm *data, int *error);
 char	*asm_removecomment(char *line);
+
+int		asm_checkvalidlabel(char *line, char *label);
+int		asm_checkcmd(char *line, t_asm *data);
+int		asm_checklabel(char *line, char *label, t_asm *data);
+int		asm_check_new_line(char *nc, t_asm *data, int *error, int fd);
+
+int		asm_checkargument(char *s, t_asm *data, int conv);
+int		asm_checkreg(char *line, t_op cmd, int nb_arg);
+
+
+
 
 #endif

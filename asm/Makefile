@@ -20,7 +20,8 @@ SRC_NAME = asm.c\
 data.c\
 op.c\
 parse.c\
-parse_cmd.c
+parse_cmd.c\
+check_arguments.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_PATH = ./inc/\

@@ -27,53 +27,6 @@ int	asm_header(char *line, t_asm *data, char *type, int toto)
 	ft_strdel(&str);
 	return (1);
 }
-#include <stdio.h>
-
-int		asm_checkvalidlabel(char *line, char *label)
-{
-	int	i;
-
-	i = 0;
-	*label = '\0';
-	while (ft_strchr(LABEL_CHARS, line[i]))
-		++i;
-	*label = LABEL_CHAR;
-	if (line + i == label)
-	{
-		return (1);
-	}
-	return (-1);
-}
-
-int	asm_checkcmd(char *line, t_asm *data)
-{
-	int i;
-
-	i = -1;
-	while (++i < 16)
-	{
-		if (ft_strncmp(line, data->op_tab[i].cmd, data->op_tab[i].len))
-			if (line[data->op_tab[i].len] == '\t' || line[data->op_tab[i].len] == ' ' || line[data->op_tab[i].len] == '\0')
-				break ;
-	}
-	if (i == 16)
-		return (-1);
-	printf("commande %s trouvee \n", data->op_tab[i].cmd);
-	return (1);
-}
-
-int	asm_checklabel(char *line, char *label, t_asm *data)
-{
-	int		ret;
-
-	ret = 0;
-	if (label)
-	{
-		ret = asm_checkvalidlabel(line, label);
-		printf("%s\n", ret == 1 ? "bon label" : "mauvais label");
-	}
-	return (ret);
-}
 
 int		asm_instruction(char *line, t_asm *data)
 {
@@ -95,8 +48,7 @@ int		asm_instruction(char *line, t_asm *data)
 			j = label - line;
 		while (line[j] && (line[j] == '\t' || line[j] == ' '))
 			++j;
-		printf("%s\n", line + j);
-		i = asm_checkcmd(line + j, data);
+		i = line[j] == '\0' ? i : asm_checkcmd(line + j, data);
 	}
 	return (i);	
 }

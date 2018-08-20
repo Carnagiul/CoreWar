@@ -37,6 +37,8 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 	count_sep_char = 0;
 	while (line[j] && err >= 0 && i < data->op_tab[conv].n_arg)
 	{
+		printf("j = %c\t", line[j]);
+
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (i == 0 && line[j] == SEPARATOR_CHAR)
@@ -47,10 +49,9 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 			return (-1);
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
-		printf("j = %c\t", line[j]);
 		if (line[j] == 'r')
 			err = asm_checkreg(line + j, data->op_tab[conv], i);
-		else if ((line[j] <= '9' && line[j] >= '0') || line[j] == LABEL_CHAR)
+		else if (line[j] == LABEL_CHAR || (line[j] <= '9' && line[j] >= '0'))
 			err = asm_checkind(line + j, data->op_tab[conv], i);
 		else if (line[j] == DIRECT_CHAR)
 			err = asm_checkdir(line + j, data->op_tab[conv], i);

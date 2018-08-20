@@ -37,7 +37,11 @@ int		asm_instruction(char *line, t_asm *data)
 	if (!ft_strcmp(line, ""))
 		return (0);
 	label = NULL;
-	label = ft_strchr(line, LABEL_CHAR);
+	j = 0;
+	while (ft_strchr(LABEL_CHARS, line[j]))
+		++j;
+	if (line[j] == LABEL_CHAR)
+		label = line + j;
 	i = 0;
 	if (label)
 		i = asm_checklabel(line, label, data);

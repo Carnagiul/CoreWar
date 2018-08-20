@@ -1,18 +1,17 @@
 #include <asm.h>
 
-int		asm_checklabelarg(char *line, t_op cmd, int nb_arg)
+int		asm_checklabelarg(char *line, int start, t_op cmd, int nb_arg)
 {
 	int	i;
 
 	i = 0;
-	printf("label pas ok\n");
 	while (ft_strchr(LABEL_CHARS, line[i]))
 		++i;
 	if (line[i] == SEPARATOR_CHAR || line[i] == '\t'
 		|| line[i] == ' ' || line[i] == '\0')
 	{
 		printf("label ok\n");
-		return (i);
+		return (i + start);
 	}
 	printf("label pas ok\n");
 	return (-1);
@@ -31,7 +30,7 @@ int		asm_checkdir(char *line, t_op cmd, int nb_arg)
 	i = 1;
 	printf("on entre dans checkdir\n");
 	if (line[i] == LABEL_CHAR)
-		return (asm_checklabelarg(line, cmd, nb_arg));
+		return (asm_checklabelarg(line + 1 + i, i + 1, cmd, nb_arg));
 	while (line[i] <= '9' && line[i] >= '0')
 		i++;
 	if (i == 1)
@@ -63,7 +62,7 @@ int		asm_checkind(char *line, t_op cmd, int nb_arg)
 	i = 0;
 	printf("on entre dans checkind\n");
 	if (line[i] == LABEL_CHAR)
-		return (asm_checklabelarg(line, cmd, nb_arg));
+		return (asm_checklabelarg(line + 1, 1, cmd, nb_arg));
 	while (line[i] <= '9' && line[i] >= '0')
 		i++;
 	if (i == 0)

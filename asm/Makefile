@@ -6,12 +6,12 @@
 #    By: hlequien <hlequien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/02/03 19:15:09 by hlequien          #+#    #+#              #
-#    Updated: 2018/08/20 08:26:32 by snassour         ###   ########.fr        #
+#    Updated: 2018/08/20 18:53:40 by snassour         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 CC = gcc
-CFLAGS = -g  # -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Og #-Werror
 #-fsanitize=address
 
 SRC_PATH = ./src/

@@ -43,8 +43,18 @@ typedef struct		s_op
 	const char		*desc;
 	uint8_t			ocp;
 	uint8_t			carry;
-	uint8_t			len;		
+	uint8_t			len;
 } t_op;
+
+struct s_clst
+{
+	char			*str;
+	int				len;
+	struct s_clst	*prec;
+	struct s_clst	*next;
+};
+
+typedef struct s_clst t_clst;
 
 struct s_asm
 {
@@ -58,6 +68,7 @@ struct s_asm
 	int			lname;
 	int			lcom;
 	int			line_error;
+	t_clst		*lst;
 };
 
 typedef struct s_asm t_asm;

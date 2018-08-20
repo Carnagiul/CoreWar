@@ -1,5 +1,35 @@
 #include <asm.h>
 
+/*
+
+typedef struct		s_op
+{
+	const char		*cmd;
+	uint8_t			n_arg;
+	uint32_t		arg[3];
+	uint8_t			opc;
+	uint16_t		cycles;
+	const char		*desc;
+	uint8_t			ocp;
+	uint8_t			carry;
+	uint8_t			len;		
+} t_op;
+
+struct s_asm
+{
+	char		*str;
+	int			str_size;
+	size_t		filelen;
+	header_t	*header;
+	t_op		op_tab[17];
+	int			name;
+	int			comment;
+	int			lname;
+	int			lcom;
+	int			line_error;
+};
+
+*/
 
 t_asm	*asm_init_data(void)
 {

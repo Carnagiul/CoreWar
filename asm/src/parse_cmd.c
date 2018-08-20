@@ -37,8 +37,6 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 	count_sep_char = 0;
 	while (line[j] && err >= 0 && i < data->op_tab[conv].n_arg)
 	{
-		printf("j = %c\t", line[j]);
-
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (i == 0 && line[j] == SEPARATOR_CHAR)

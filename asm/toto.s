@@ -2,6 +2,6 @@
 .comment " rff "		#;ewkf
 #.comment " rfrf "
 
-sti r1,:label, 499
+sti r2,r3,34
 
 live r1

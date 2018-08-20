@@ -1,0 +1,3 @@
+A ajouter a libft :
+
+size_t	ft_pow_st(size_t nb, size_t pow);

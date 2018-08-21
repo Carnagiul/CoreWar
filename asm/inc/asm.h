@@ -94,6 +94,7 @@ int		asm_checkargument(char *s, t_asm *data, int conv);
 int		asm_checkreg(char *line, t_op cmd, int nb_arg);
 int		asm_checkind(char *line, t_op cmd, int nb_arg);
 int		asm_checkdir(char *line, t_op cmd, int nb_arg);
+int		asm_addclist(t_asm *data, char *line, int conv);
 
 
 

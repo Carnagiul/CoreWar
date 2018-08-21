@@ -85,7 +85,8 @@ int		asm_checkcmd(char *line, t_asm *data)
 		return (-1);
 	if (asm_checkargument(line + j + data->op_tab[i].len, data, i) == -1)
 		return (-1);
-	asm_addclist(data, line + j + data->op_tab[i].len, i);
+	if (asm_addclist(data, line + j + data->op_tab[i].len, i) == -1)
+		return (-1);
 	return (1);
 }
 

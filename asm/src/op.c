@@ -28,7 +28,11 @@ presence de l'OCP - 1 == oui et 0 == non, */
 	uint8_t			ocp;
 	uint8_t			carry;
 	uint8_t			len;		
-} t_op;*/
+} t_op;
+
+ligne 1608
+
+*/
 
 t_op    op_tab[17] =
 {

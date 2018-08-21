@@ -18,32 +18,40 @@ int		asm_checkdir(char *line, t_op cmd, int nb_arg)
 	int		i;
 	int		nb;
 	int		j;
+	int 	neg;
 	char	c;
-	char	*check;
+//	char	*check;
 	
+	neg = 0;
 	if (*line != DIRECT_CHAR)
 		return (-1);
 	i = 1;
 	if (line[i] == LABEL_CHAR)
 		return (asm_checklabelarg(line + 1 + i, i + 1, cmd, nb_arg));
+	if (line[i] == '-')
+	{
+		++i;
+		neg = -1;
+	}
 	while (line[i] <= '9' && line[i] >= '0')
 		i++;
-	if (i == 1)
+	if (i == 1 || line[i] == '-')
 		return (-1);
 	c = line[i];
 	line[i] = '\0';
 	nb = ft_atoi(line + 1);
-	check = NULL;
-	check = ft_itoa(nb);
-	if (!check)
-		return (-1);
-	j = 1;
-	while (check[j - 1] && line[j] && check[j - 1] == line[j])
-		++j;
-	line[i] = c;
-	c = (j == i ? 1 : -1);
-	ft_strdel(&check);
-	return (c == -1 ? -1 : j);
+	printf("nb == %x\n", nb);
+//	check = NULL;
+//	check = ft_itoa(nb);
+//	if (!check)
+//		return (-1);
+//	j = 1;
+//	while (check[j - 1] && line[j] && check[j - 1] == line[j])
+//		++j;
+//	line[i] = c;
+//	c = (j == i ? 1 : -1);
+//	ft_strdel(&check);
+	return (i);
 }
 
 int		asm_checkind(char *line, t_op cmd, int nb_arg)
@@ -53,13 +61,20 @@ int		asm_checkind(char *line, t_op cmd, int nb_arg)
 	char	*check;
 	int		nb;
 	int		j;
+	int		neg;
 
 	i = 0;
+	neg = 0;
 	if (line[i] == LABEL_CHAR)
 		return (asm_checklabelarg(line + 1, 1, cmd, nb_arg));
+	if (line[i] == '-')
+	{
+		++i;
+		neg = -1;
+	}
 	while (line[i] <= '9' && line[i] >= '0')
 		i++;
-	if (i == 0)
+	if (i == 0 || line[i] == '-')
 		return (-1);
 	c = line[i];
 	line[i] = '\0';

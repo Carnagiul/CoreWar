@@ -75,37 +75,40 @@ int	asm_check_new_line(char *nc, t_asm *data, int *error)
 	if (!i && (j = asm_header(nc, data, COMMENT_CMD_STRING, 2)) == -1)
 		err = -1;
 	*error = data->line_error;
-	if (!i && !j && asm_instruction(nc, data) == -1)
-		err = -1;
+	if (!i && !j && (l = asm_instruction(nc, data)) <= -1)
+		err = l;
 	ft_strdel(&nc);
-	return (err == -1 ? - 1 : 1);
+	return (err <= -1 ? err : 1);
 }
 
-int	asm_parse_file(int fd, t_asm *data, int *error)
+int	asm_parse_file(int fd, t_asm *data, int *error, char **line)
 {
-	char	*line;
+	char	*line1;
 	char	*nc;
+	int		err_type;
 
-	line = NULL;
-	if (!(line = (char *)malloc(sizeof(char))))
+	line1 = NULL;
+	if (!(line1 = (char *)malloc(sizeof(char))))
 		return (MFAIL);
-	while (get_next_line(fd, &line) > 0)
+	while (get_next_line(fd, &line1) > 0)
 	{
+		*line ? ft_strdel(line) : NULL;
+		*line = ft_strdup(line1);
 		*error = MFAIL;
 		nc = NULL;
-		if (!(nc = asm_removecomment(line)))
+		if (!(nc = asm_removecomment(line1)))
 		{
-			ft_strdel(&line);
-			return (-1 + 0 * close(fd) * get_next_line(fd, &line));
+			ft_strdel(&line1);
+			return (-1 + 0 * close(fd) * get_next_line(fd, &line1));
 		}
-		if (asm_check_new_line(nc, data, error) == -1)
+		if ((err_type = asm_check_new_line(nc, data, error)) <= -1)
 		{
-			ft_strdel(&line);
-			return (-1 + 0 * close(fd) * get_next_line(fd, &line));
+			ft_strdel(&line1);
+			return (err_type + 0 * close(fd) * get_next_line(fd, &line1));
 		}
 		data->line_error++;
 	}
-	*error = 0 * close(fd) * get_next_line(fd, &line);
-	ft_strdel(&line);
+	*error = 0 * close(fd) * get_next_line(fd, &line1);
+	ft_strdel(&line1);
 	return (1);
 }

@@ -2,8 +2,11 @@
 .comment " rff "		#;ewkf
 #.comment " rfrf "
 
-sti r2,r3,r1
+ldi r1,r1,%2
+
+sti r2,r2,r1
 
 ii:
 
 live %1
+

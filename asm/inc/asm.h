@@ -74,15 +74,15 @@ struct s_asm
 typedef struct s_asm t_asm;
 
 int		asm_verify_entry(int ac, char **av);
-int		asm_error(int toto, int err);
+int		asm_error(int toto, int err, char *str, int index, char *line);
 void	asm_get_optab(t_asm *data);
 
-int		asm_verify_format(char *av, t_asm *data, int *toto);
+int		asm_verify_format(char *av, t_asm *data, int *toto, char **line);
 t_asm	*asm_init_data();
 int		asm_destroy_data(t_asm **data);
 int		asm_header(char *line, t_asm *data, char *type, int toto);
 int		asm_instruction(char *line, t_asm *data);
-int		asm_parse_file(int fd, t_asm *data, int *error);
+int		asm_parse_file(int fd, t_asm *data, int *error, char **line);
 char	*asm_removecomment(char *line);
 
 int		asm_checkvalidlabel(char *line, char *label);

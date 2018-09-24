@@ -34,6 +34,7 @@ ligne 1608
 
 */
 
+
 t_op    op_tab[17] =
 {
 	{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0, 4},

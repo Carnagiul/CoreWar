@@ -47,7 +47,7 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 			++j;
 		if (line[j] == 'r')
 			err = asm_checkreg(line + j, data->op_tab[conv], i);
-		else if (line[j] == LABEL_CHAR || (line[j] <= '9' && line[j] >= '0'))
+		else if (line[j] == LABEL_CHAR || (line[j] <= '9' && line[j] >= '0') || line[j] == '-')
 			err = asm_checkind(line + j, data->op_tab[conv], i);
 		else if (line[j] == DIRECT_CHAR)
 			err = asm_checkdir(line + j, data->op_tab[conv], i);
@@ -59,6 +59,8 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 				++j;
 		++i;
 	}
+	if (line[j] == '\0' && count_sep_char < data->op_tab[conv].n_arg - 1)
+		return (-1);
 	return (line[j] == '\0' ? err : -1);
 }
 
@@ -77,7 +79,7 @@ int		asm_checkcmd(char *line, t_asm *data)
 			break ;
 	}
 	if (i == 16)
-		return (-1);
+		return (-2);
 	j = 0;
 	while (line[j] == '\t' || line[j] == ' ')
 		++j;
@@ -95,6 +97,8 @@ char	*asm_removecomment(char *line)
 	char	*loc;
 
 	if ((loc = ft_strchr(line, COMMENT_CHAR)))
+		*loc = '\0';
+	if ((loc = ft_strchr(line, END_COMMENT_CHAR)))
 		*loc = '\0';
 	return (ft_strdup(line));
 }

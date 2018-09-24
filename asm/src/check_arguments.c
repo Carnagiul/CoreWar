@@ -40,7 +40,7 @@ int		asm_checkdir(char *line, t_op cmd, int nb_arg)
 	c = line[i];
 	line[i] = '\0';
 	nb = ft_atoi(line + 1);
-	printf("asm_checkdir : nb == %x && nb == %d\n", nb, nb);
+	line[i] = c;
 //	check = NULL;
 //	check = ft_itoa(nb);
 //	if (!check)

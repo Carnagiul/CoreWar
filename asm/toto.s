@@ -2,7 +2,8 @@
 .comment " rff "		#;ewkf
 #.comment " rfrf "
 
-ldi r1,r1,%2
+ld %222
+ r2, ii
 
 sti r2,r2,r1
 

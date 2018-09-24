@@ -40,10 +40,10 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 		if (i == 0 && line[j] == SEPARATOR_CHAR)
 			return (-1);
 		if (line[j] == SEPARATOR_CHAR)
-			j += 1 + 0 * ++count_sep_char;
+			j += 1 + (0 * ++count_sep_char);
 		if (count_sep_char >= data->op_tab[conv].n_arg)
 			return (-1);
-		while (line[j] == '\t' || line[j] == ' ')
+			while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (line[j] == 'r')
 			err = asm_checkreg(line + j, data->op_tab[conv], i);
@@ -59,7 +59,7 @@ int		asm_checkargument(char *line, t_asm *data, int conv)
 				++j;
 		++i;
 	}
-	if (line[j] == '\0' && count_sep_char < data->op_tab[conv].n_arg - 1)
+	if (line[j] == '\0' && count_sep_char != data->op_tab[conv].n_arg - 1)
 		return (-1);
 	return (line[j] == '\0' ? err : -1);
 }

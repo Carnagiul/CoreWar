@@ -58,31 +58,35 @@ typedef struct s_clst t_clst;
 
 struct s_asm
 {
-	char		*str;
-	int			str_size;
-	size_t		filelen;
-	header_t	*header;
-	t_op		op_tab[17];
-	int			name;
-	int			comment;
-	int			lname;
-	int			lcom;
-	int			line_error;
-	t_clst		*lst;
+	char		*str; // current line
+	int			str_size; // not used yet
+	char		*dot_s_name; // file name
+	size_t		filelen; // not used yet
+	header_t	*header; // not used yet
+	t_op		op_tab[17]; // tab with all the operations
+	int			name; // indicator of name encounter
+	int			comment; // indicator of comment encounter
+	int			lname; // name length
+	int			lcom; // comment length
+	int			line_error; // line that contains an error number
+	t_clst		*lst; // not used yet
+	int			err_type;
+	int			error_one;
+	char		*error_char;
 };
 
 typedef struct s_asm t_asm;
 
 int		asm_verify_entry(int ac, char **av);
-int		asm_error(int toto, int err, char *str, int index, char *line);
+int		asm_error(int toto, int err, char *str, int index, char *line, t_asm *data);
 void	asm_get_optab(t_asm *data);
 
-int		asm_verify_format(char *av, t_asm *data, int *toto, char **line);
+int		asm_verify_format(t_asm *data, int *toto);
 t_asm	*asm_init_data();
 int		asm_destroy_data(t_asm **data);
 int		asm_header(char *line, t_asm *data, char *type, int toto);
 int		asm_instruction(char *line, t_asm *data);
-int		asm_parse_file(int fd, t_asm *data, int *error, char **line);
+int		asm_parse_file(int fd, t_asm *data, int *error);
 char	*asm_removecomment(char *line);
 
 int		asm_checkvalidlabel(char *line, char *label);
@@ -95,7 +99,7 @@ int		asm_checkreg(char *line, t_op cmd, int nb_arg);
 int		asm_checkind(char *line, t_op cmd, int nb_arg);
 int		asm_checkdir(char *line, t_op cmd, int nb_arg);
 int		asm_addclist(t_asm *data, char *line, int conv);
-
+void	asm_write_color_error(char *color, int len, int output);
 
 
 #endif

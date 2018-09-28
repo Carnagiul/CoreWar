@@ -100,5 +100,8 @@ char	*asm_removecomment(char *line)
 		*loc = '\0';
 	if ((loc = ft_strchr(line, END_COMMENT_CHAR)))
 		*loc = '\0';
-	return (ft_strdup(line));
+	loc = NULL;
+	loc = ft_strtrim(line);
+//	ft_strdel(&line);
+	return (loc);
 }

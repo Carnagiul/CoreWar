@@ -31,19 +31,22 @@ struct s_asm
 
 */
 
+#include <stdio.h>
+
 t_asm	*asm_init_data(void)
 {
 	t_asm	*data;
 
 	if (!(data = ft_memalloc(sizeof(t_asm))))
 		return (NULL);
-	data->header = ft_memalloc(sizeof(header_t));
-	data->str = ft_memalloc(sizeof(char));
-	if (!(data->str) || !(data->header))
+	data->header = NULL;
+	data->header = (header_t *)ft_memalloc(sizeof(header_t));
+	if (!(data->header))
 	{
 		asm_destroy_data(&data);
 		return (NULL);
 	}
+	data->str = NULL;
 	ft_bzero(data->header->prog_name, PROG_NAME_LENGTH + 1);
 	ft_bzero(data->header->comment, COMMENT_LENGTH + 1);
 	data->filelen = 0;

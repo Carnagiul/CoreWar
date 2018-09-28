@@ -11,7 +11,7 @@
 #******************************************************************************#
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Og #-Werror
+CFLAGS = -g -Wall -Wextra -Og
 #-fsanitize=address
 
 SRC_PATH = ./src/
@@ -22,7 +22,8 @@ op.c\
 parse.c\
 parse_cmd.c\
 check_arguments.c\
-asm_list.c
+asm_list.c\
+asm_write_color.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_PATH = ./inc/\

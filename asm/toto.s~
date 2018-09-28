@@ -1,9 +1,15 @@
-.name "toto" #opewit
-.comment " rff "		#;ewkf
-#.comment " rfrf "
+.comment "      iii         "		#;ewkf
 
-ld %222, r2
+; toto        
 
+.name "     ooo        " #opewit
+                  
+ld %222, r2	
+
+	#.comment " rfrf "
+
+
+       
 sti r2,%22222222222222222222222,%1
 
 ii:

@@ -18,6 +18,16 @@
 # define INFILE -4
 
 
+#define NO_FILE 100
+#define TOO_MANY_FILES 200
+#define WRONG_EXTENSION 300
+#define FILE_NO_OPEN 400
+#define CHAMPION_NAME_ERROR 500
+#define COMMENT_ERROR 600
+#define UNKNOWN_FUNCTION 700
+#define INVALID_ARGUMENT 800
+
+
 /*
 struct	s_op
 {
@@ -58,6 +68,7 @@ typedef struct s_clst t_clst;
 
 struct s_asm
 {
+	int			fd;
 	char		*str; // current line
 	int			str_size; // not used yet
 	char		*dot_s_name; // file name
@@ -78,7 +89,7 @@ struct s_asm
 typedef struct s_asm t_asm;
 
 int		asm_verify_entry(int ac, char **av);
-int		asm_error(int toto, int err, char *str, int index, char *line, t_asm *data);
+int		asm_error(int toto, char *str, t_asm *data);
 void	asm_get_optab(t_asm *data);
 
 int		asm_verify_format(t_asm *data, int *toto);
@@ -86,7 +97,7 @@ t_asm	*asm_init_data();
 int		asm_destroy_data(t_asm **data);
 int		asm_header(char *line, t_asm *data, char *type, int toto);
 int		asm_instruction(char *line, t_asm *data);
-int		asm_parse_file(int fd, t_asm *data, int *error);
+int		asm_parse_file(t_asm *data, int *error);
 char	*asm_removecomment(char *line);
 
 int		asm_checkvalidlabel(char *line, char *label);
@@ -99,7 +110,9 @@ int		asm_checkreg(char *line, t_op cmd, int nb_arg);
 int		asm_checkind(char *line, t_op cmd, int nb_arg);
 int		asm_checkdir(char *line, t_op cmd, int nb_arg);
 int		asm_addclist(t_asm *data, char *line, int conv);
-void	asm_write_color_error(char *color, int len, int output);
+void	asm_write_color(char *color, int len, int output);
+
+void	asm_parse_file_error(t_asm *data, char **line, char **nc, int error);
 
 
 #endif

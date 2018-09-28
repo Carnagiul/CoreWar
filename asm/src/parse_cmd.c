@@ -79,14 +79,20 @@ int		asm_checkcmd(char *line, t_asm *data)
 			break ;
 	}
 	if (i == 16)
+	{
+		asm_error(UNKNOWN_FUNCTION, NULL, data);
 		return (-2);
+	}
 	j = 0;
 	while (line[j] == '\t' || line[j] == ' ')
 		++j;
 	if (line[j] == '\0')
 		return (-1);
 	if (asm_checkargument(line + j + data->op_tab[i].len, data, i) == -1)
+	{
+		asm_error(INVALID_ARGUMENT, NULL, data);
 		return (-1);
+	}
 	if (asm_addclist(data, line + j + data->op_tab[i].len, i) == -1)
 		return (-1);
 	return (1);

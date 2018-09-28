@@ -12,7 +12,10 @@ int	asm_header(char *line, t_asm *data, char *type, int toto)
 	if (ft_strncmp(line, type, len))
 		return (0);
 	if ((toto == 1 && data->name == 1) || (toto == 2 && data->comment == 1))
+	{
+		asm_error(toto == 1 ? CHAMPION_NAME_ERROR : COMMENT_ERROR, NULL, data);
 		return (-1);
+	}
 	toto == 1 ? (data->name = 1) : (data->comment = 1);
 //	str = ft_strsub(line, len, ft_strlen(line) - len);
 	tmp = ft_strtrim(line + len);
@@ -21,6 +24,7 @@ int	asm_header(char *line, t_asm *data, char *type, int toto)
 	if (len > 0 && (tmp[0] != '"' || tmp[len] != '"'))
 	{
 		ft_strdel(&tmp);
+		asm_error(toto == 1 ? CHAMPION_NAME_ERROR : COMMENT_ERROR, NULL, data);
 		return (-1);
 	}
 //	str = ft_strsub(tmp, 1, len);
@@ -43,7 +47,7 @@ int		asm_instruction(char *line, t_asm *data)
 	if (!ft_strcmp(line, ""))
 		return (0);
 	if (data->name == 0 || data->comment == 0)
-		return (-1);
+		return (data->name == 0 ? CHAMPION_NAME_ERROR : COMMENT_ERROR);
 	label = NULL;
 	j = 0;
 	while (ft_strchr(LABEL_CHARS, line[j]))
@@ -83,13 +87,31 @@ int	asm_check_new_line(char *nc, t_asm *data, int *error)
 	if (!i && (j = asm_header(nc, data, COMMENT_CMD_STRING, 2)) == -1)
 		err = -1;
 	*error = data->line_error;
-	if (!i && !j && (l = asm_instruction(nc, data)) <= -1)
+	if ((!i && !j && (l = asm_instruction(nc, data)) <= -1) || l == CHAMPION_NAME_ERROR || l == COMMENT_ERROR)
 		err = l;
-//	ft_strdel(&nc);
-	return (err <= -1 ? err : 1);
+	return (err <= -1 || l == CHAMPION_NAME_ERROR || l == COMMENT_ERROR ? err : 1);
 }
 
-int	asm_parse_file(int fd, t_asm *data, int *error)
+void	asm_parse_file_error(t_asm *data, char **line, char **nc, int error)
+{
+	ft_strdel(nc);
+	ft_strdel(line);
+	close(data->fd);
+	get_next_line(data->fd, line);
+	asm_error(error <= -1 ? UNKNOWN_FUNCTION : error, data->str, data);
+}
+
+void	asm_exit_success(t_asm *data)
+{
+	asm_write_color("\033[1;32m", ft_strlen("\033[1;32m"), 1);
+	ft_putstr("Generating Corewar file for ");
+	ft_putendl(data->dot_s_name);
+	asm_write_color("\033[0m", ft_strlen("\033[0m"), 1);
+	asm_destroy_data(&data);
+	exit(EXIT_SUCCESS);
+}
+
+int	asm_parse_file(t_asm *data, int *error)
 {
 	char	*line1;
 	char	*nc;
@@ -98,32 +120,25 @@ int	asm_parse_file(int fd, t_asm *data, int *error)
 	line1 = NULL;
 	if (!(line1 = (char *)malloc(sizeof(char))))
 		return (MFAIL);
-	while (get_next_line(fd, &line1) > 0)
+	while (get_next_line(data->fd, &line1) > 0)
 	{
 		data->str ? ft_strdel(&(data->str)) : NULL;
 		data->str = ft_strdup(line1);
 		*error = MFAIL;
 		nc = NULL;
 		if (!(nc = asm_removecomment(line1)))
-		{
-			ft_strdel(&line1);
-			ft_strdel(&nc);
-			return (-1 + 0 * close(fd) * get_next_line(fd, &line1));
-		}
+			asm_parse_file_error(data, &line1, &nc, -1);
 		data->error_char = NULL;
 		ft_strdel(&line1);
 		if ((err_type = asm_check_new_line(nc, data, error)) <= -1)
-		{
-			get_next_line(fd, &line1);
-			ft_strdel(&line1);
-			close(fd);
-			ft_strdel(&nc);
-			return (err_type);
-		}
+			asm_parse_file_error(data, &line1, &nc, err_type);
+		if (err_type == CHAMPION_NAME_ERROR || err_type == COMMENT_ERROR)
+			asm_parse_file_error(data, &line1, &nc, err_type);
 		ft_strdel(&nc);
 		data->line_error++;
 	}
-	*error = 0 * close(fd) * get_next_line(fd, &line1);
+	*error = 0 * close(data->fd) * get_next_line(data->fd, &line1);
 	ft_strdel(&line1);
+	asm_exit_success(data);
 	return (1);
 }

@@ -1,6 +1,6 @@
 #include <asm.h>
 
-void	asm_write_color_error(char *color, int len, int output)
+void	asm_write_color(char *color, int len, int output)
 {
 	if (color == NULL)
 		return ;

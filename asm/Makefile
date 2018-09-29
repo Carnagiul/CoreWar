@@ -23,7 +23,8 @@ parse.c\
 parse_cmd.c\
 check_arguments.c\
 asm_list.c\
-asm_write_color.c
+asm_write_color.c\
+asm_error.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_PATH = ./inc/\

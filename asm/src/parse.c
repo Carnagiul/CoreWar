@@ -4,7 +4,6 @@
 
 int	asm_header(char *line, t_asm *data, char *type, int toto)
 {
-//	char	*str;
 	char	*tmp;
 	int		len;
 
@@ -13,27 +12,22 @@ int	asm_header(char *line, t_asm *data, char *type, int toto)
 		return (0);
 	if ((toto == 1 && data->name == 1) || (toto == 2 && data->comment == 1))
 	{
+		ft_strdel(&line);
 		asm_error(toto == 1 ? CHAMPION_NAME_ERROR : COMMENT_ERROR, NULL, data);
-		return (-1);
 	}
 	toto == 1 ? (data->name = 1) : (data->comment = 1);
-//	str = ft_strsub(line, len, ft_strlen(line) - len);
 	tmp = ft_strtrim(line + len);
-//	ft_strdel(&str);
 	len = ft_strlen(tmp) - 1;
 	if (len > 0 && (tmp[0] != '"' || tmp[len] != '"'))
 	{
 		ft_strdel(&tmp);
+		ft_strdel(&line);
 		asm_error(toto == 1 ? CHAMPION_NAME_ERROR : COMMENT_ERROR, NULL, data);
-		return (-1);
 	}
-//	str = ft_strsub(tmp, 1, len);
-//	ft_strdel(&tmp);
 	if (toto == 1)
 		ft_strncpy(data->header->prog_name, tmp + 1, len - 1);
 	else
 		ft_strncpy(data->header->comment, tmp + 1, len - 1);
-//	ft_strdel(&str);
 	ft_strdel(&tmp);
 	return (1);
 }
@@ -64,12 +58,12 @@ int		asm_instruction(char *line, t_asm *data)
 			j = label + 1 - line;
 		while (line[j] && (line[j] == '\t' || line[j] == ' '))
 			++j;
-		i = line[j] == '\0' ? i : asm_checkcmd(line + j, data);
+		i = (line[j] == '\0' ? i : asm_checkcmd(line, j, data));
 	}
 	return (i);	
 }
 
-int	asm_check_new_line(char *nc, t_asm *data, int *error)
+int	asm_check_new_line(char *nc, t_asm *data)
 {
 	int	i;
 	int j;
@@ -80,25 +74,22 @@ int	asm_check_new_line(char *nc, t_asm *data, int *error)
 	i = 0;
 	j = 0;
 	err = 0;
-	*error = NLINE;
 	if ((i = asm_header(nc, data, NAME_CMD_STRING, 1)) == -1)
 		err = -1;
-	*error = CLINE;
 	if (!i && (j = asm_header(nc, data, COMMENT_CMD_STRING, 2)) == -1)
 		err = -1;
-	*error = data->line_error;
 	if ((!i && !j && (l = asm_instruction(nc, data)) <= -1) || l == CHAMPION_NAME_ERROR || l == COMMENT_ERROR)
 		err = l;
 	return (err <= -1 || l == CHAMPION_NAME_ERROR || l == COMMENT_ERROR ? err : 1);
 }
 
-void	asm_parse_file_error(t_asm *data, char **line, char **nc, int error)
+void	asm_parse_file_error(t_asm *data, char **line, char **nc)
 {
 	ft_strdel(nc);
 	ft_strdel(line);
 	close(data->fd);
 	get_next_line(data->fd, line);
-	asm_error(error <= -1 ? UNKNOWN_FUNCTION : error, data->str, data);
+	asm_error(data->error_type <= -1 ? UNKNOWN_FUNCTION : data->error_type, NULL, data);
 }
 
 void	asm_exit_success(t_asm *data)
@@ -111,33 +102,35 @@ void	asm_exit_success(t_asm *data)
 	exit(EXIT_SUCCESS);
 }
 
-int	asm_parse_file(t_asm *data, int *error)
+int	asm_parse_file(t_asm *data)
 {
 	char	*line1;
 	char	*nc;
-	int		err_type;
 
 	line1 = NULL;
 	if (!(line1 = (char *)malloc(sizeof(char))))
-		return (MFAIL);
+		asm_error(MFAIL, NULL, data);
 	while (get_next_line(data->fd, &line1) > 0)
 	{
-		data->str ? ft_strdel(&(data->str)) : NULL;
+		ft_strdel(&(data->str));
 		data->str = ft_strdup(line1);
-		*error = MFAIL;
 		nc = NULL;
 		if (!(nc = asm_removecomment(line1)))
-			asm_parse_file_error(data, &line1, &nc, -1);
+		{
+			data->error_type = -1;
+			asm_parse_file_error(data, &line1, &nc);
+		}
 		data->error_char = NULL;
-		ft_strdel(&line1);
-		if ((err_type = asm_check_new_line(nc, data, error)) <= -1)
-			asm_parse_file_error(data, &line1, &nc, err_type);
-		if (err_type == CHAMPION_NAME_ERROR || err_type == COMMENT_ERROR)
-			asm_parse_file_error(data, &line1, &nc, err_type);
+		if ((data->error_type = asm_check_new_line(nc, data)) <= -1)
+			asm_parse_file_error(data, &line1, &nc);
+		if (data->error_type == CHAMPION_NAME_ERROR || data->error_type == COMMENT_ERROR)
+			asm_parse_file_error(data, &line1, &nc);
 		ft_strdel(&nc);
 		data->line_error++;
 	}
-	*error = 0 * close(data->fd) * get_next_line(data->fd, &line1);
+	close(data->fd);
+	ft_strdel(&line1);
+	get_next_line(data->fd, &line1);
 	ft_strdel(&line1);
 	asm_exit_success(data);
 	return (1);

@@ -56,6 +56,12 @@ t_asm	*asm_init_data(void)
 	data->lcom = ft_strlen(COMMENT_CMD_STRING);
 	data->line_error = 0;
 	data->lst = NULL;
+	data->error_type = 0;
+	data->error_one = 0;
+	data->error_char = NULL;
+	data->cmd = 0;
+	data->ocp = 0;
+	data->nb_arg = 0;
 	asm_get_optab(data);
 	return (data);
 }

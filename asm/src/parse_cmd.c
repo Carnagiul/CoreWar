@@ -30,44 +30,52 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 	int	count_sep_char;
 
 	i = 0;
-	j = 0;
+	j = begin;
 	err = 0;
 	count_sep_char = 0;
-	while ((line + begin)[j] && err >= 0 && i < data->op_tab[conv].n_arg)
+	while (line[j] && err >= 0 && i < data->op_tab[conv].n_arg)
 	{
-		while ((line + begin)[j] == '\t' || (line + begin)[j] == ' ')
+		while (line[j] == '\t' || line[j] == ' ')
 			++j;
-		if (i == 0 && (line + begin)[j] == SEPARATOR_CHAR)
+		if (i == 0 && line[j] == SEPARATOR_CHAR)
 		{
-//			ft_strdel(&line);
-			asm_error(INVALID_ARGUMENT, NULL, data);
+			asm_parse_file_error(data, &line, NULL);
 		}
-		if ((line + begin)[j] == SEPARATOR_CHAR)
+		if (line[j] == SEPARATOR_CHAR)
 			j += 1 + (0 * ++count_sep_char);
 		if (count_sep_char >= data->op_tab[conv].n_arg)
 		{
-//			ft_strdel(&line);
-			asm_error(INVALID_ARGUMENT, NULL, data);
+			asm_parse_file_error(data, &line, NULL);
 		}
-		while ((line + begin)[j] == '\t' || (line + begin)[j] == ' ')
+		while (line[j] == '\t' || line[j] == ' ')
 			++j;
-		if ((line + begin)[j] == 'r')
-			err = asm_checkreg(line, begin + j, data->op_tab[conv], i, data);
-		else if ((line + begin)[j] == LABEL_CHAR || ((line + begin)[j] <= '9' && (line + begin)[j] >= '0') || (line + begin)[j] == '-')
-			err = asm_checkind(line, begin + j, data->op_tab[conv], i);
-		else if ((line + begin)[j] == DIRECT_CHAR)
-			err = asm_checkdir(line, begin + j, data->op_tab[conv], i);
+		if (line[j] == 'r')
+		{
+
+			j += asm_checkreg(line, j, data->op_tab[conv], i, data);
+		}
+		else if (line[j] == LABEL_CHAR || (line[j] <= '9' && line[j] >= '0') || line[j] == '-')
+		{
+
+			j += asm_checkind(line, j, data->op_tab[conv], i);
+		}
+		else if (line[j] == DIRECT_CHAR)
+		{
+			j += asm_checkdir(line, j, data->op_tab[conv], i);
+		}
 		else
-			asm_error(INVALID_ARGUMENT, NULL, data);
-		j = (err == -1 ? 0 : j + err);
-		if (err > 0)
-			while ((line + begin)[j] && ((line + begin)[j] == '\t' || (line + begin)[j] == ' '))
-				++j;
+		{
+			asm_parse_file_error(data, &line, NULL);
+		}
+		while (line[j] && (line[j] == '\t' || line[j] == ' '))
+			++j;
 		++i;
 	}
-	if ((line + begin)[j] == '\0' && count_sep_char != data->op_tab[conv].n_arg - 1)
-		asm_error(INVALID_ARGUMENT, NULL, data);
-	return ((line + begin)[j] == '\0' ? err : -1);
+	if (line[j] == '\0' && count_sep_char != data->op_tab[conv].n_arg - 1)
+	{
+		asm_parse_file_error(data, &line, NULL);
+	}
+	return ((line)[j] == '\0' ? 1 : -1);
 }
 
 int		asm_checkcmd(char *line, int begin, t_asm *data)
@@ -84,23 +92,19 @@ int		asm_checkcmd(char *line, int begin, t_asm *data)
 		if (!ft_strncmp((line + begin), data->op_tab[i].cmd, j > data->op_tab[i].len ? j : data->op_tab[i].len))
 			break ;
 	}
+	data->error_type = UNKNOWN_FUNCTION;
 	if (i == 16)
-	{
-//		ft_strdel(&line);
-		asm_error(UNKNOWN_FUNCTION, NULL, data);
-	}
+		asm_parse_file_error(data, &line, NULL);
 	j = 0;
 	while ((line + begin)[j] == '\t' || (line + begin)[j] == ' ')
 		++j;
+	data->error_type = INVALID_ARGUMENT;
 	if ((line + begin)[j] == '\0')
-	{
-//		ft_strdel(&line);
-		asm_error(INVALID_ARGUMENT, NULL, data);
-	}
+		asm_parse_file_error(data, &line, NULL);
 	if (asm_checkargument(line, begin + j + data->op_tab[i].len, data, i) == -1)
-		asm_error(INVALID_ARGUMENT, NULL, data);
-	if (asm_addclist(data, line, begin + j + data->op_tab[i].len, i) == -1)
-		return (-1);
+		asm_parse_file_error(data, &line, NULL);
+	data->error_type = 0;
+	asm_addclist(data, line, begin + j + data->op_tab[i].len, i);
 	return (1);
 }
 

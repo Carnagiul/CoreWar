@@ -1,9 +1,13 @@
-.comment "tata"
-.name "toto"
+.comment "tata42"
+.name "totootot"
 
 
-live %1
+live %0
 
-live r1
+#live %1
+
+sti r4, r4, r99
+
+sti r99, r4, r4
 
 	

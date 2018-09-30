@@ -88,7 +88,7 @@ int		asm_addclist(t_asm *data, char *line, int begin, int conv)
 			|| (!(op.arg[i] & T_DIR) && (ocp & 2) == 1)
 			|| (!(op.arg[i] & T_IND) && (ocp & 1) == 1 && (ocp & 2) == 1))
 		{
-			ft_strdel(&line);
+//			ft_strdel(&line);
 			asm_error(INVALID_ARGUMENT, NULL, data);
 		}
 		ocp <<= 2;

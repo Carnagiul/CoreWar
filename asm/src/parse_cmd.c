@@ -19,6 +19,11 @@ int		asm_checklabel(char *line, char *label, t_asm *data)
 	ret = 0;
 	if (label)
 		ret = asm_checkvalidlabel(line, label);
+	if (ret < 0)
+	{
+		data->error_type = INVALID_LABEL;
+		asm_parse_file_error(data, NULL, NULL);
+	}
 	return (ret);
 }
 
@@ -38,44 +43,28 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (i == 0 && line[j] == SEPARATOR_CHAR)
-		{
 			asm_parse_file_error(data, &line, NULL);
-		}
 		if (line[j] == SEPARATOR_CHAR)
 			j += 1 + (0 * ++count_sep_char);
 		if (count_sep_char >= data->op_tab[conv].n_arg)
-		{
 			asm_parse_file_error(data, &line, NULL);
-		}
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (line[j] == 'r')
-		{
-
 			j += asm_checkreg(line, j, data->op_tab[conv], i, data);
-		}
 		else if (line[j] == LABEL_CHAR || (line[j] <= '9' && line[j] >= '0') || line[j] == '-')
-		{
-
 			j += asm_checkind(line, j, data->op_tab[conv], i);
-		}
 		else if (line[j] == DIRECT_CHAR)
-		{
 			j += asm_checkdir(line, j, data->op_tab[conv], i);
-		}
 		else
-		{
 			asm_parse_file_error(data, &line, NULL);
-		}
 		while (line[j] && (line[j] == '\t' || line[j] == ' '))
 			++j;
 		++i;
 	}
-	if (line[j] == '\0' && count_sep_char != data->op_tab[conv].n_arg - 1)
-	{
+	if (count_sep_char != data->op_tab[conv].n_arg - 1 || line[j] != '\0')
 		asm_parse_file_error(data, &line, NULL);
-	}
-	return ((line)[j] == '\0' ? 1 : -1);
+	return (1);
 }
 
 int		asm_checkcmd(char *line, int begin, t_asm *data)

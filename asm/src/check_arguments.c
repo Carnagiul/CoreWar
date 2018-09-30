@@ -84,23 +84,25 @@ int		asm_checkreg(char *line, int begin, t_op cmd, int nb_arg, t_asm *data)
 	while ((line + begin)[i] <= '9' && (line + begin)[i] >= '0')
 		i++;
 	if (i == 1)
-		return (-1);
+		asm_parse_file_error(data, &line, NULL);
 	c = (line + begin)[i];
 	(line + begin)[i] = '\0';
 	nb = ft_atoi((line + begin) + 1);
-	if (nb > REG_NUMBER)
-		asm_error(INVALID_ARGUMENT, NULL, data);
+	if (nb > REG_NUMBER || nb < 1)
+		asm_parse_file_error(data, &line, NULL);
 	check = NULL;
+	data->error_type = MFAIL;
 	check = ft_itoa(nb);
 	if (!check)
-		asm_error(MFAIL, NULL, data);
+		asm_parse_file_error(data, &line, NULL);
 	j = 1;
+	data->error_type = INVALID_ARGUMENT;
 	while (check[j - 1] && (line + begin)[j] && check[j - 1] == (line + begin)[j])
 		++j;
 	(line + begin)[i] = c;
 	c = (j == i ? 1 : -1);
 	ft_strdel(&check);
 	if (j != i)
-		asm_error(INVALID_ARGUMENT, NULL, data);
+		asm_parse_file_error(data, &line, NULL);
 	return (c == -1 ? -1 : j);
 }

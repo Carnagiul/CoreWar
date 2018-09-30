@@ -40,11 +40,9 @@ int		asm_instruction(char *line, t_asm *data)
 
 	if (!ft_strcmp(line, ""))
 		return (0);
+	data->error_type = data->name == 0 ? CHAMPION_NAME_ERROR : COMMENT_ERROR;
 	if (data->name == 0 || data->comment == 0)
-	{
-		data->error_type = data->name == 0 ? CHAMPION_NAME_ERROR : COMMENT_ERROR;
 		asm_parse_file_error(data, &line, NULL);
-	}
 	label = NULL;
 	j = 0;
 	while (ft_strchr(LABEL_CHARS, line[j]))
@@ -80,7 +78,7 @@ void	asm_parse_file_error(t_asm *data, char **line, char **nc)
 	ft_strdel(line);
 	close(data->fd);
 	get_next_line(data->fd, line);
-	asm_error(data->error_type <= -1 ? UNKNOWN_FUNCTION : data->error_type, NULL, data);
+	asm_error(data->error_type, NULL, data);
 }
 
 void	asm_exit_success(t_asm *data)
@@ -89,38 +87,34 @@ void	asm_exit_success(t_asm *data)
 	ft_putstr("Generating Corewar file for ");
 	ft_putendl(data->dot_s_name);
 	asm_write_color("\033[0m", ft_strlen("\033[0m"), 1);
-	asm_destroy_data(&data);
-	exit(EXIT_SUCCESS);
+//	asm_destroy_data(&data);
+//	exit(EXIT_SUCCESS);
 }
 
-int	asm_parse_file(t_asm *data)
+int		asm_parse_file(t_asm *data)
 {
-	char	*line1;
 	char	*nc;
+	char	*line;
 
-	line1 = NULL;
-	if (!(line1 = (char *)malloc(sizeof(char))))
+	ft_strdel(&(data->str));
+	if (!(data->str = (char *)malloc(sizeof(char))))
 		asm_error(MFAIL, NULL, data);
-	while (get_next_line(data->fd, &line1) > 0)
+	while (get_next_line(data->fd, &(data->str)) > 0)
 	{
-		ft_strdel(&(data->str));
-		data->str = ft_strdup(line1);
-		nc = NULL;
-		if (!(nc = asm_removecomment(line1)))
-		{
-			data->error_type = -1;
-			asm_parse_file_error(data, &line1, &nc);
-		}
-		ft_strdel(&line1);
+		data->error_type = MFAIL;
 		data->error_char = NULL;
+		nc = NULL;
+		line = ft_strdup(data->str);
+		if (!(nc = asm_removecomment(data->str)))
+			asm_parse_file_error(data, &line, &nc);
+		ft_strdel(&line);
 		asm_check_new_line(nc, data);
 		ft_strdel(&nc);
 		data->line_error++;
 	}
 	close(data->fd);
-	ft_strdel(&line1);
-	get_next_line(data->fd, &line1);
-	ft_strdel(&line1);
+	ft_strdel(&(data->str));
+	get_next_line(data->fd, &(data->str));
 	asm_exit_success(data);
 	return (1);
 }

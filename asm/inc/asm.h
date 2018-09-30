@@ -26,7 +26,7 @@
 #define COMMENT_ERROR 600
 #define UNKNOWN_FUNCTION 700
 #define INVALID_ARGUMENT 800
-
+#define INVALID_LABEL 900
 
 /*
 struct	s_op
@@ -96,7 +96,7 @@ struct s_asm
 
 typedef struct s_asm t_asm;
 
-int		asm_verify_entry(int ac, char **av);
+int		asm_verify_entry(int ac, char **av, int i);
 void	asm_get_optab(t_asm *data);
 
 int		asm_verify_format(t_asm *data);

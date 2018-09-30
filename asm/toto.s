@@ -6,8 +6,10 @@
 
 .name "     ooo        " #opewit
                   
-ld %222, r2	
+				ld 							%222,			   				 r1				;:
+ld %1, r9	
 
+#--==:			
 	#.comment " rfrf "
 
 tir: sti	r1,%:tirb,%1
@@ -16,5 +18,5 @@ sti r2,%67,%1
 
 ii:
 
-live r1
+live %1
 

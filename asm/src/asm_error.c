@@ -34,6 +34,14 @@ void	asm_gcc_format_error(char *str)
 	asm_write_color("\033[0m", ft_strlen("\033[0m"), 2);
 }
 
+void	asm_error_label(t_asm *data)
+{
+	ft_putstr_fd(": invalid label\n", 2);
+	asm_write_color("\033[0;31m", ft_strlen("\033[0;31m"), 2);
+	ft_putendl_fd(data->str, 2);
+	asm_write_color("\033[0m", ft_strlen("\033[0m"), 2);	
+}
+
 void	asm_error(int toto, char *str, t_asm *data)
 {
 	if (toto == MFAIL)
@@ -54,6 +62,8 @@ void	asm_error(int toto, char *str, t_asm *data)
 		asm_error_format_name_comment(toto, data);
 	else if (toto == UNKNOWN_FUNCTION || toto == INVALID_ARGUMENT)
 		asm_error_format_line(toto, data);
+	else if (toto == INVALID_LABEL)
+		asm_error_label(data);
 	asm_destroy_data(&data);
 	exit(EXIT_FAILURE);
 }

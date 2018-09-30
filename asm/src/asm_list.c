@@ -74,23 +74,36 @@ int		asm_addclist(t_asm *data, char *line, int begin, int conv)
 		neg = 0;
 		while ((line + begin)[j] == ' ' || (line + begin)[j] == '\t')
 			++j;
-		if ((line + begin)[j] == 'r' || (line + begin)[j] == DIRECT_CHAR)
-		{
-			if ((line + begin)[j] == 'r')
-				ocp |= 1;
-			else if ((line + begin)[j] == DIRECT_CHAR)
-				ocp |= 2;
-			++j;
-		}
-		else
+		if ((line + begin)[j] == 'r' && (op.arg[i] & T_REG))
+			ocp |= 1;
+		else if ((line + begin)[j] == DIRECT_CHAR && (op.arg[i] & T_DIR))
+			ocp |= 2;
+		else if ((op.arg[i] & T_IND))
 			ocp |= 3;
-		if ((!(op.arg[i] & T_REG) && (ocp & 1) == 1)
-			|| (!(op.arg[i] & T_DIR) && (ocp & 2) == 1)
-			|| (!(op.arg[i] & T_IND) && (ocp & 1) == 1 && (ocp & 2) == 1))
+		else
 		{
-//			ft_strdel(&line);
 			asm_error(INVALID_ARGUMENT, NULL, data);
+			return (-1);
 		}
+// 		if ((line + begin)[j] == 'r' || (line + begin)[j] == DIRECT_CHAR)
+// 		{
+// 			if ((line + begin)[j] == 'r')
+// 				ocp |= 1;
+// 			else if ((line + begin)[j] == DIRECT_CHAR)
+// 				ocp |= 2;
+// 			++j;
+// 		}
+// 		else
+// 			ocp |= 3;
+// 		if ((!(op.arg[i] & T_REG) && (ocp & 1) == 1)
+// 			|| (!(op.arg[i] & T_DIR) && (ocp & 2) == 1)
+// 			|| (!(op.arg[i] & T_IND) && (ocp & 1) == 1 && (ocp & 2) == 1))
+// 		{
+// //			ft_strdel(&line);
+// 			printf("%s && i == %d\n", "oreoirjewi", i);
+// 			asm_error(INVALID_ARGUMENT, NULL, data);
+// 			return (-1);
+// 		}
 		ocp <<= 2;
 		save = j;
 		if ((line + begin)[j] == LABEL_CHAR)

@@ -64,6 +64,6 @@ void	asm_error(int toto, char *str, t_asm *data)
 		asm_error_format_line(toto, data);
 	else if (toto == INVALID_LABEL)
 		asm_error_label(data);
-	asm_destroy_data(&data);
-	exit(EXIT_FAILURE);
+//	asm_destroy_data(&data);
+//	exit(EXIT_FAILURE);
 }

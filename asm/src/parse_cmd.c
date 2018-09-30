@@ -23,6 +23,7 @@ int		asm_checklabel(char *line, char *label, t_asm *data)
 	{
 		data->error_type = INVALID_LABEL;
 		asm_parse_file_error(data, NULL, NULL);
+		return (-1);
 	}
 	return (ret);
 }
@@ -43,27 +44,51 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (i == 0 && line[j] == SEPARATOR_CHAR)
+		{
 			asm_parse_file_error(data, &line, NULL);
+			return (-1);
+		}
 		if (line[j] == SEPARATOR_CHAR)
 			j += 1 + (0 * ++count_sep_char);
 		if (count_sep_char >= data->op_tab[conv].n_arg)
+		{
 			asm_parse_file_error(data, &line, NULL);
+			return (-1);
+		}
 		while (line[j] == '\t' || line[j] == ' ')
 			++j;
 		if (line[j] == 'r')
-			j += asm_checkreg(line, j, data->op_tab[conv], i, data);
+		{
+			if ((err = asm_checkreg(line, j, data->op_tab[conv], i, data)) < 0)
+				return (-1);
+			j += err;
+		}
 		else if (line[j] == LABEL_CHAR || (line[j] <= '9' && line[j] >= '0') || line[j] == '-')
-			j += asm_checkind(line, j, data->op_tab[conv], i);
+		{
+			if ((err = asm_checkind(line, j, data->op_tab[conv], i)) < 0)
+				return (-1);
+			j += err;
+		}
 		else if (line[j] == DIRECT_CHAR)
-			j += asm_checkdir(line, j, data->op_tab[conv], i);
+		{
+			if ((err = asm_checkdir(line, j, data->op_tab[conv], i)) < 0)
+				return (-1);
+			j += err;
+		}
 		else
+		{
 			asm_parse_file_error(data, &line, NULL);
+			return (-1);
+		}
 		while (line[j] && (line[j] == '\t' || line[j] == ' '))
 			++j;
 		++i;
 	}
 	if (count_sep_char != data->op_tab[conv].n_arg - 1 || line[j] != '\0')
+	{
 		asm_parse_file_error(data, &line, NULL);
+		return (-1);
+	}
 	return (1);
 }
 
@@ -83,17 +108,32 @@ int		asm_checkcmd(char *line, int begin, t_asm *data)
 	}
 	data->error_type = UNKNOWN_FUNCTION;
 	if (i == 16)
+	{
 		asm_parse_file_error(data, &line, NULL);
+		return (-1);
+	}
 	j = 0;
 	while ((line + begin)[j] == '\t' || (line + begin)[j] == ' ')
 		++j;
 	data->error_type = INVALID_ARGUMENT;
 	if ((line + begin)[j] == '\0')
+	{
 		asm_parse_file_error(data, &line, NULL);
+		return (-1);
+	}
+	data->cmd = i;
+	data->nb_arg = data->op_tab[i].n_arg;
 	if (asm_checkargument(line, begin + j + data->op_tab[i].len, data, i) == -1)
-		asm_parse_file_error(data, &line, NULL);
+	{
+//		asm_parse_file_error(data, &line, NULL);
+		return (-1);
+	}
 	data->error_type = 0;
-	asm_addclist(data, line, begin + j + data->op_tab[i].len, i);
+	if (asm_addclist(data, line, begin + j + data->op_tab[i].len, i) == -1)
+	{
+
+		return (-1);
+	}
 	return (1);
 }
 

@@ -7,7 +7,11 @@
 .name "     ooo        " #opewit
                   
 				ld 							%222,			   				 r1				;:
-ld %1, r9	
+add r5, r4, r9	
+
+ld :buff    ,    r1
+
+st r8, 4
 
 #--==:			
 	#.comment " rfrf "

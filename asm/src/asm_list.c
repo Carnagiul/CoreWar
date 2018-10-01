@@ -1,55 +1,5 @@
 #include <asm.h>
 
-/*
-struct s_clst
-{
-	char			*str;
-	int				len;
-	struct s_clst	*prec;
-	struct s_clst	*next;
-};
-
-typedef struct s_clst t_clst;
-
-struct s_asm
-{
-	char		*str;
-	int			str_size;
-	size_t		filelen;
-	header_t	*header;
-	t_op		op_tab[17];
-	int			name;
-	int			comment;
-	int			lname;
-	int			lcom;
-	int			line_error;
-	t_clst		*lst;
-};
-
-typedef struct		s_op
-{
-	const char		*cmd;
-	uint8_t			n_arg;
-	uint32_t		arg[3];
-	uint8_t			opc;
-	uint16_t		cycles;
-	const char		*desc;
-	uint8_t			ocp;
-	uint8_t			carry;
-	uint8_t			len;
-} t_op;
-*/
-
-/*
-*	ACTUELLEMENT :
-*
-*	TESTS en little endian -- 
-*
-*	TESTS avec gestion de label : si label dans commande on met 1
-*
-*	TESTS avec indirect = valeur direct
-*/
-
 int		asm_addclist(t_asm *data, char *line, int begin, int conv)
 {
 	char	s[4][13];
@@ -60,7 +10,7 @@ int		asm_addclist(t_asm *data, char *line, int begin, int conv)
 	int		tab[3];
 	t_op	op;
 	int		ocp;
-	int 	neg;
+	int		neg;
 
 	i = -1;
 	while (++i < 4)
@@ -85,25 +35,6 @@ int		asm_addclist(t_asm *data, char *line, int begin, int conv)
 			asm_error(INVALID_ARGUMENT, NULL, data);
 			return (-1);
 		}
-// 		if ((line + begin)[j] == 'r' || (line + begin)[j] == DIRECT_CHAR)
-// 		{
-// 			if ((line + begin)[j] == 'r')
-// 				ocp |= 1;
-// 			else if ((line + begin)[j] == DIRECT_CHAR)
-// 				ocp |= 2;
-// 			++j;
-// 		}
-// 		else
-// 			ocp |= 3;
-// 		if ((!(op.arg[i] & T_REG) && (ocp & 1) == 1)
-// 			|| (!(op.arg[i] & T_DIR) && (ocp & 2) == 1)
-// 			|| (!(op.arg[i] & T_IND) && (ocp & 1) == 1 && (ocp & 2) == 1))
-// 		{
-// //			ft_strdel(&line);
-// 			printf("%s && i == %d\n", "oreoirjewi", i);
-// 			asm_error(INVALID_ARGUMENT, NULL, data);
-// 			return (-1);
-// 		}
 		ocp <<= 2;
 		save = j;
 		if ((line + begin)[j] == LABEL_CHAR)

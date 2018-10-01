@@ -1,5 +1,14 @@
 #include <asm.h>
 
+void	asm_exit_success(t_asm *data)
+{
+	asm_write_color("\033[1;32m", ft_strlen("\033[1;32m"), 1);
+	ft_putstr("Generating Corewar file : ");
+	write(1, data->dot_s_name, ft_strlen(data->dot_s_name) - 1);
+	write(1, "cor\n", 4);
+	asm_write_color("\033[0m", ft_strlen("\033[0m"), 1);
+}
+
 int		asm_verify_entry(int ac, char **av, int i)
 {
 	int len;
@@ -9,8 +18,6 @@ int		asm_verify_entry(int ac, char **av, int i)
 		asm_error(NO_FILE, NULL, NULL);
 		return (-1);
 	}
-//	if (ac > 2)
-//		asm_error(TOO_MANY_FILES, NULL, NULL);
 	len = ft_strlen(av[i]);
 	if (av[i][len - 2] != '.' || av[i][len - 1] != 's')
 	{
@@ -20,7 +27,7 @@ int		asm_verify_entry(int ac, char **av, int i)
 	return (0);
 }
 
-int	asm_verify_format(t_asm *data)
+int		asm_verify_format(t_asm *data)
 {
 	if ((data->fd = open(data->dot_s_name, O_RDONLY)) == -1)
 	{
@@ -32,7 +39,7 @@ int	asm_verify_format(t_asm *data)
 	return (0);
 }
 
-int main(int ac, char **av)
+int		main(int ac, char **av)
 {
 	t_asm	*data;
 	int		i;
@@ -42,10 +49,7 @@ int main(int ac, char **av)
 	{
 		data = NULL;
 		if (asm_verify_entry(ac, av, i))
-		{
-//			asm_error(MFAIL, NULL, NULL);
 			continue ;
-		}
 		data = asm_init_data();
 		if (!data)
 		{
@@ -53,8 +57,7 @@ int main(int ac, char **av)
 			continue ;
 		}
 		data->dot_s_name = av[i];
-		if (asm_verify_format(data) == -1)
-			asm_error(UNKNOWN_FUNCTION, NULL, data);
+		asm_verify_format(data);
 		asm_destroy_data(&data);
 	}
 	return (0);

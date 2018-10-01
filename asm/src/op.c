@@ -10,32 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <asm.h>
-# include <op.h>
-# include <stdint.h>
+#include <asm.h>
 
-/*nom, nb_args, types d'args, opcode, cycles, explication nom, 
-presence de l'OCP - 1 == oui et 0 == non, */
-
-/*typedef struct					s_op
-{
-	const char		*cmd;
-	uint8_t			n_arg;
-	uint32_t		arg[3];
-	uint8_t			opc;
-	uint16_t		cycles;
-	const char		*desc;
-	uint8_t			ocp;
-	uint8_t			carry;
-	uint8_t			len;		
-} t_op;
-
-ligne 1608
-
-*/
-
-
-t_op    op_tab[17] =
+t_op	g_op_tab[17] =
 {
 	{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0, 4},
 	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0, 2},
@@ -68,5 +45,5 @@ void	asm_get_optab(t_asm *data)
 
 	i = -1;
 	while (++i < 17)
-		data->op_tab[i] = op_tab[i];
+		data->op_tab[i] = g_op_tab[i];
 }

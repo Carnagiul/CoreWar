@@ -43,6 +43,9 @@ struct	s_op
 
 typedef struct s_op t_op;*/
 
+/*nom, nb_args, types d'args, opcode, cycles, explication nom, 
+presence de l'OCP - 1 == oui et 0 == non, */
+
 typedef struct		s_op
 {
 	const char		*cmd;
@@ -113,14 +116,16 @@ int		asm_checklabel(char *line, char *label, t_asm *data);
 int		asm_check_new_line(char *nc, t_asm *data);
 
 int		asm_checkargument(char *s, int begin, t_asm *data, int conv);
-int		asm_checkreg(char *line, int begin, t_op cmd, int nb_arg, t_asm *data);
+int		asm_checkreg(char *line, int begin, int nb_arg, t_asm *data);
 int		asm_checkind(char *line, int begin, t_op cmd, int nb_arg);
 int		asm_checkdir(char *line, int begin, t_op cmd, int nb_arg);
 int		asm_addclist(t_asm *data, char *line, int begin, int conv);
 
 void	asm_write_color(char *color, int len, int output); // should be in libft -- uses isatty function -- this a color bonus therefore this is allowed -- checking tty is better in case you want to use a log file
 
-void	asm_parse_file_error(t_asm *data, char **line, char **nc);
+int		asm_parse_file_error(t_asm *data, char **line, char **nc);
+
+void	asm_exit_success(t_asm *data);
 
 void	asm_error(int toto, char *str, t_asm *data);
 void	asm_error_format_line(int format, t_asm *data);

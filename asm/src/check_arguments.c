@@ -44,9 +44,7 @@ int		asm_checkind(char *line, int begin, t_op cmd, int nb_arg)
 {
 	int		i;
 	char	c;
-	char	*check;
 	int		nb;
-	int		j;
 
 	i = 0;
 	if ((line + begin)[i] == LABEL_CHAR)
@@ -69,14 +67,12 @@ int		asm_checkind(char *line, int begin, t_op cmd, int nb_arg)
 	return (i);
 }
 
-int		asm_checkreg(char *line, int begin, t_op cmd, int nb_arg, t_asm *data)
+int		asm_checkreg(char *line, int begin, int nb_arg, t_asm *data)
 {
 	int		i;
 	int		nb;
-	int		j;
 	char	c;
-	char	*check;
-	
+
 	if (*(line + begin) != 'r')
 		return (-1);
 	i = 1;
@@ -90,30 +86,8 @@ int		asm_checkreg(char *line, int begin, t_op cmd, int nb_arg, t_asm *data)
 	c = (line + begin)[i];
 	(line + begin)[i] = '\0';
 	nb = ft_atoi((line + begin) + 1);
-	if (nb > REG_NUMBER || nb < 1)
-	{
-		asm_parse_file_error(data, &line, NULL);
-		return (-1);
-	}
-	// check = NULL;
-	// data->error_type = MFAIL;
-	// check = ft_itoa(nb);
-	// if (!check)
-	// {
-	// 	asm_parse_file_error(data, &line, NULL);
-	// 	return (-1);
-	// }
-	// j = 1;
-	// data->error_type = INVALID_ARGUMENT;
-	// while (check[j - 1] && (line + begin)[j] && check[j - 1] == (line + begin)[j])
-	// 	++j;
 	(line + begin)[i] = c;
-//	c = (j == i ? 1 : -1);
-//	ft_strdel(&check);
-	// if (j != i)
-	// {
-	// 	asm_parse_file_error(data, &line, NULL);
-	// 	return (-1);
-	// }
-	return (i);
+	if (nb > REG_NUMBER || nb < 1)
+		asm_parse_file_error(data, &line, NULL);
+	return ((nb > REG_NUMBER || nb < 1) ? -1 : i);
 }

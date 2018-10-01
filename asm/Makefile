@@ -24,11 +24,17 @@ parse_cmd.c\
 check_arguments.c\
 asm_list.c\
 asm_write_color.c\
-asm_error.c
+asm_error.c\
+asm_tools.c\
+asm_checklabel.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_PATH = ./inc/\
 ./libft/includes/
+
+INC_FILES = ./inc/asm.h\
+./inc/op.h
+
 NAME = asm
 
 LIB = -L./libft -lft
@@ -38,11 +44,11 @@ INC = $(addprefix -I,$(INC_PATH))
 
 all:$(NAME)
 
-$(NAME):$(OBJ)
+$(NAME):$(OBJ) $(INC_FILES)
 #	$(CC) $(CFLAGS) $(OBJ) $(INC) -o $(NAME)
 	gcc $(CFLAGS) -o $(NAME) $(OBJ) $(LIB)
 
-$(OBJ_PATH)%.o:$(SRC_PATH)%.c
+$(OBJ_PATH)%.o:$(SRC_PATH)%.c $(INC_FILES)
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 

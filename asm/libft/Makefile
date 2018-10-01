@@ -85,6 +85,7 @@ SRC_NAME = 	ft_atoi.c\
 			ft_isint.c\
 			get_next_line.c\
 			ft_putgrid.c
+INC_FILES = ./includes/libft.h
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
@@ -96,11 +97,11 @@ INC = $(addprefix -I,$(INC_PATH))
 
 all: $(NAME)
 
-$(NAME): 	$(OBJ)
+$(NAME): 	$(OBJ) $(INC_FILES)
 		ar rc $(NAME) $(OBJ)
 		ranlib $(NAME)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC_FILES)
 		@mkdir -p $(OBJ_PATH)
 		@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 

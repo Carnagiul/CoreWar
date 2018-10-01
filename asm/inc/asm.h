@@ -131,6 +131,7 @@ void	asm_error(int toto, char *str, t_asm *data);
 void	asm_error_format_line(int format, t_asm *data);
 void	asm_error_format_name_comment(int format, t_asm *data);
 void	asm_gcc_format_error(char *str);
-
+int		asm_max(int a, int b);
+int		asm_blank(char *line, int begin);
 
 #endif

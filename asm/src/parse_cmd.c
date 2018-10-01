@@ -12,44 +12,6 @@
 
 #include <asm.h>
 
-int		asm_checkvalidlabel(char *line, char *label)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] != LABEL_CHAR && ft_strchr(LABEL_CHARS, line[i]))
-		++i;
-	if (i != 0 && line[i] == LABEL_CHAR)
-		return (1);
-	return (-1);
-}
-
-int		asm_checklabel(char *line, char *label, t_asm *data)
-{
-	int		ret;
-
-	ret = 0;
-	if (label)
-		ret = asm_checkvalidlabel(line, label);
-	if (ret < 0)
-	{
-		data->error_type = INVALID_LABEL;
-		asm_parse_file_error(data, NULL, NULL);
-		return (-1);
-	}
-	return (ret);
-}
-
-int		asm_blank(char *line, int begin)
-{
-	int j;
-
-	j = 0;
-	while (line[begin] && (line[begin + j] == '\t' || line[begin + j] == ' '))
-		++j;
-	return (j);
-}
-
 int		asm_check_type_arg(char **line, int j, int i, t_asm *data)
 {
 	int		err;
@@ -99,11 +61,6 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 	if (sep_char != data->op_tab[conv].n_arg - 1 || line[j] != '\0')
 		return (asm_parse_file_error(data, &line, NULL));
 	return (1);
-}
-
-int		asm_max(int a, int b)
-{
-	return (a > b ? a : b);
 }
 
 int		asm_checkcmd(char *l, int b, t_asm *d)

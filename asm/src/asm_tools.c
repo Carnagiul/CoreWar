@@ -12,6 +12,30 @@
 
 #include <asm.h>
 
+void	toggle_endianess(int *n)
+{
+    char *tmp;
+    char i;
+
+    tmp = (char *)n;
+    i = tmp[0];
+    tmp[0] = tmp[3];
+    tmp[3] = i;
+    i = tmp[1];
+    tmp[1] = tmp[2];
+    tmp[2] = i;
+}
+
+int		asm_bigendian(int number, int size)
+{
+	if (size == 4)
+		toggle_endianess(&number);
+	if (size == 2)
+		toggle_endianess(&number);
+	if (size == 1)
+		toggle_endianess(&number);
+	return (number);
+}
 
 int		asm_max(int a, int b)
 {

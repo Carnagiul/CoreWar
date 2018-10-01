@@ -12,6 +12,20 @@
 
 #include <asm.h>
 
+void	asm_dellabel(t_asm *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nb_arg)
+	{
+		if (data->label_in_arg[i] == LABEL_SET)
+			ft_strdel(&(data->labels[i]));
+		data->label_in_arg[i] = LABEL_NOTSET;
+		++i;
+	}
+}
+
 int		asm_checkvalidlabel(char *line, char *label)
 {
 	int	i;

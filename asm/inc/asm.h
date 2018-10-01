@@ -17,6 +17,9 @@
 # define CLINE -3
 # define INFILE -4
 
+# define LABEL_SET 1
+# define LABEL_NOTSET 0
+
 
 #define NO_FILE 100
 #define TOO_MANY_FILES 200
@@ -117,8 +120,8 @@ int		asm_check_new_line(char *nc, t_asm *data);
 
 int		asm_checkargument(char *s, int begin, t_asm *data, int conv);
 int		asm_checkreg(char *line, int begin, int nb_arg, t_asm *data);
-int		asm_checkind(char *line, int begin, t_op cmd, int nb_arg);
-int		asm_checkdir(char *line, int begin, t_op cmd, int nb_arg);
+int		asm_checkind(char *line, int begin, t_asm *data, int nb_arg);
+int		asm_checkdir(char *line, int begin, t_asm *data, int nb_arg);
 int		asm_addclist(t_asm *data, char *line, int begin, int conv);
 
 void	asm_write_color(char *color, int len, int output); // should be in libft -- uses isatty function -- this a color bonus therefore this is allowed -- checking tty is better in case you want to use a log file
@@ -133,5 +136,9 @@ void	asm_error_format_name_comment(int format, t_asm *data);
 void	asm_gcc_format_error(char *str);
 int		asm_max(int a, int b);
 int		asm_blank(char *line, int begin);
+void	toggle_endianess(int *n);
+int		asm_bigendian(int number, int size);
+void	asm_dellabel(t_asm *data);
+void	asm_reinit_data(t_asm *data);
 
 #endif

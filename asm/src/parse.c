@@ -63,6 +63,7 @@ int		asm_instruction(char *line, t_asm *data)
 	while (line[j] && (line[j] == '\t' || line[j] == ' '))
 		++j;
 	i = (line[j] == '\0' ? i : asm_checkcmd(line, j, data));
+//	asm_dellabel(data);
 	return (i);
 }
 
@@ -84,6 +85,7 @@ int		asm_parse_file_error(t_asm *data, char **line, char **nc)
 	ft_strdel(line);
 	close(data->fd);
 	get_next_line(data->fd, line);
+//	asm_dellabel(data);
 	asm_error(data->error_type, NULL, data);
 	return (-1);
 }
@@ -109,6 +111,7 @@ int		asm_parse_file(t_asm *data)
 			return (-1);
 		ft_strdel(&nc);
 		data->line_error++;
+		asm_reinit_data(data);
 	}
 	close(data->fd);
 	ft_strdel(&(data->str));

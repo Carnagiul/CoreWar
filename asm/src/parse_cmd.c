@@ -21,13 +21,13 @@ int		asm_check_type_arg(char **line, int j, int i, t_asm *data)
 		return (-1);
 	else if ((*line)[j] == DIRECT_CHAR)
 	{
-		if ((err = asm_checkdir(*line, j, data->op_tab[data->cmd], i)) < 0)
+		if ((err = asm_checkdir(*line, j, data, i)) < 0)
 			return (-1);
 	}
 	else if (((*line)[j] == LABEL_CHAR
 		|| ((*line)[j] <= '9' && (*line)[j] >= '0') || (*line)[j] == '-'))
 	{
-		if ((err = asm_checkind(*line, j, data->op_tab[data->cmd], i)) < 0)
+		if ((err = asm_checkind(*line, j, data, i)) < 0)
 			return (-1);
 	}
 	else if (err == -1)
@@ -47,11 +47,14 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 	sep_char = 0;
 	while (++i < data->op_tab[conv].n_arg && line[j] && err >= 0)
 	{
+		//ft_putchar('1');
 		j += asm_blank(line, j);
 		j = (line[j] == SEPARATOR_CHAR ? ((j + 1) + (0 * ++sep_char)) : j);
 		if ((i == 0 && sep_char == 1) || (sep_char >= data->op_tab[conv].n_arg))
 			return (asm_parse_file_error(data, &line, NULL));
+//		printf("%s && line = %s\n", "asm_checkargument : ici", line + j);
 		j += asm_blank(line, j);
+//		printf("%s && line = %s\n", "asm_checkargument : ici", line + j);
 		err = asm_check_type_arg(&line, j, i, data);
 		if (err == -1)
 			return (-1);
@@ -86,8 +89,8 @@ int		asm_checkcmd(char *l, int b, t_asm *d)
 	d->nb_arg = d->op_tab[i].n_arg;
 	if (asm_checkargument(l, b + j, d, i) == -1)
 		return (-1);
-	if (asm_addclist(d, l, b + j, i) == -1)
-		return (-1);
+//	if (asm_addclist(d, l, b + j, i) == -1)
+//		return (-1);
 	return (1);
 }
 

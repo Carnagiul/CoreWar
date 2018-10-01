@@ -12,6 +12,14 @@
 
 #include <asm.h>
 
+void	asm_reinit_data(t_asm *data)
+{
+	//asm_dellabel(data);
+	data->ocp = 0;
+	data->cmd = 0;
+	data->nb_arg = 0;
+}
+
 t_asm	*asm_init_data(void)
 {
 	t_asm	*data;

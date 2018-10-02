@@ -139,6 +139,6 @@ int		asm_blank(char *line, int begin);
 void	toggle_endianess(int *n);
 int		asm_bigendian(int number, int size);
 void	asm_dellabel(t_asm *data);
-void	asm_reinit_data(t_asm *data);
+void	asm_reinit_data(t_asm **data);
 
 #endif

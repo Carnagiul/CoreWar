@@ -42,27 +42,33 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 	int err;
 	int	sep_char;
 
-	i = -1;
+	i = 0;
 	j = begin;
 	sep_char = 0;
-	while (++i < data->op_tab[conv].n_arg && line[j] && err >= 0)
+	while (line[j] && i < data->op_tab[conv].n_arg && err >= 0)
 	{
 		//ft_putchar('1');
 		j += asm_blank(line, j);
 		j = (line[j] == SEPARATOR_CHAR ? ((j + 1) + (0 * ++sep_char)) : j);
+		// write(1, "not here 0", 10);
 		if ((i == 0 && sep_char == 1) || (sep_char >= data->op_tab[conv].n_arg))
 			return (asm_parse_file_error(data, &line, NULL));
+		// write(1, "not here 1", 10);
 //		printf("%s && line = %s\n", "asm_checkargument : ici", line + j);
 		j += asm_blank(line, j);
 //		printf("%s && line = %s\n", "asm_checkargument : ici", line + j);
 		err = asm_check_type_arg(&line, j, i, data);
+		// write(1, "not here 2", 10);
 		if (err == -1)
 			return (-1);
+		// write(1, "not here 3", 10);
+		++i;
 		j += err;
 		j += asm_blank(line, j);
 	}
 	if (sep_char != data->op_tab[conv].n_arg - 1 || line[j] != '\0')
 		return (asm_parse_file_error(data, &line, NULL));
+	// write(1, "not here 4", 10);
 	return (1);
 }
 

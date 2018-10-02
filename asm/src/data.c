@@ -12,12 +12,23 @@
 
 #include <asm.h>
 
-void	asm_reinit_data(t_asm *data)
+void	asm_reinit_data(t_asm **data)
 {
-	//asm_dellabel(data);
-	data->ocp = 0;
-	data->cmd = 0;
-	data->nb_arg = 0;
+	int	i;
+
+	i = 0;
+	ft_bzero((*data)->arg, 3);
+	ft_bzero((*data)->arg_type, 3);
+	// while ((*data)->arg[i] < 3)
+	// {
+	// 	(*data)->arg_type[i] = 0;
+	// 	(*data)->arg[i] = 0;
+	// 	++i;
+	// }
+	//asm_dellabel((*data));
+	(*data)->ocp = 0;
+	(*data)->cmd = 0;
+	(*data)->nb_arg = 0;
 }
 
 t_asm	*asm_init_data(void)
@@ -35,6 +46,8 @@ t_asm	*asm_init_data(void)
 	}
 	ft_bzero(data->header->prog_name, PROG_NAME_LENGTH + 1);
 	ft_bzero(data->header->comment, COMMENT_LENGTH + 1);
+	ft_bzero(data->arg_type, 3);
+	ft_bzero(data->arg, 3);
 	data->str = NULL;
 	data->lst = NULL;
 	data->error_char = NULL;

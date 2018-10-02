@@ -97,9 +97,13 @@ int		asm_parse_file(t_asm *data)
 
 	ft_strdel(&(data->str));
 	if (!(data->str = (char *)malloc(sizeof(char))))
+	{
 		asm_error(MFAIL, NULL, data);
+		return (-1);
+	}
 	while (get_next_line(data->fd, &(data->str)) > 0)
 	{
+		asm_reinit_data(&data);
 		data->error_type = MFAIL;
 		data->error_char = NULL;
 		nc = NULL;
@@ -111,7 +115,6 @@ int		asm_parse_file(t_asm *data)
 			return (-1);
 		ft_strdel(&nc);
 		data->line_error++;
-		asm_reinit_data(data);
 	}
 	close(data->fd);
 	ft_strdel(&(data->str));

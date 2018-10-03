@@ -26,7 +26,8 @@ asm_list.c\
 asm_write_color.c\
 asm_error.c\
 asm_tools.c\
-asm_checklabel.c
+asm_checklabel.c\
+corewar_list.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_PATH = ./inc/\

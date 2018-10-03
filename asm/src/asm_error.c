@@ -65,7 +65,7 @@ void	asm_error(int toto, char *str, t_asm *data)
 	if (toto >= 300)
 		asm_gcc_format_error(str == NULL ? data->dot_s_name : str);
 	if (toto == WRONG_EXTENSION)
-		ft_putendl_fd("wrong file extension", 2);
+		ft_putendl_fd("wrong file extension, .s file expected", 2);
 	if (toto == FILE_NO_OPEN)
 		ft_putendl_fd("couldn't open file", 2);
 	if (toto >= CHAMPION_NAME_ERROR)

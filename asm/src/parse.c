@@ -43,7 +43,7 @@ int		asm_instruction(char *line, t_asm *data)
 	int		j;
 	char	*label;
 
-	if (!ft_strcmp(line, ""))
+	if (ft_strcmp(line, "") == 0)
 		return (0);
 	data->error_type = data->name == 0 ? CHAMPION_NAME_ERROR : COMMENT_ERROR;
 	if (data->name == 0 || data->comment == 0)
@@ -63,7 +63,6 @@ int		asm_instruction(char *line, t_asm *data)
 	while (line[j] && (line[j] == '\t' || line[j] == ' '))
 		++j;
 	i = (line[j] == '\0' ? i : asm_checkcmd(line, j, data));
-//	asm_dellabel(data);
 	return (i);
 }
 
@@ -85,7 +84,6 @@ int		asm_parse_file_error(t_asm *data, char **line, char **nc)
 	ft_strdel(line);
 	close(data->fd);
 	get_next_line(data->fd, line);
-//	asm_dellabel(data);
 	asm_error(data->error_type, NULL, data);
 	return (-1);
 }
@@ -101,21 +99,25 @@ int		asm_parse_file(t_asm *data)
 		asm_error(MFAIL, NULL, data);
 		return (-1);
 	}
-	while (get_next_line(data->fd, &(data->str)) > 0)
+	line = NULL;
+	while (get_next_line(data->fd, &line) > 0)
 	{
-		asm_reinit_data(&data);
+		ft_strdel(&(data->str));
 		data->error_type = MFAIL;
 		data->error_char = NULL;
 		nc = NULL;
-		line = ft_strdup(data->str);
-		if (!(nc = asm_removecomment(data->str)))
+		data->str = (line ? ft_strdup(line) : NULL);
+		if (!(nc = asm_removecomment(line)))
 			return (asm_parse_file_error(data, &line, &nc));
 		ft_strdel(&line);
 		if (asm_check_new_line(nc, data) != 1)
 			return (-1);
 		ft_strdel(&nc);
 		data->line_error++;
+		asm_reinit_data(&data);
 	}
+	ft_strdel(&line);
+	asm_destroy_corlist(data);
 	close(data->fd);
 	ft_strdel(&(data->str));
 	get_next_line(data->fd, &(data->str));

@@ -68,6 +68,8 @@ int		asm_checkargument(char *line, int begin, t_asm *data, int conv)
 	}
 	if (sep_char != data->op_tab[conv].n_arg - 1 || line[j] != '\0')
 		return (asm_parse_file_error(data, &line, NULL));
+	if (asm_create_corlist(data) == -1)
+		return (-1);
 	// write(1, "not here 4", 10);
 	return (1);
 }

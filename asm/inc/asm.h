@@ -60,13 +60,15 @@ typedef struct		s_op
 	uint8_t			ocp;
 	uint8_t			carry;
 	uint8_t			len;
-} t_op;
+}					t_op;
 
 struct s_clst
 {
-	char			*str;
-	int				len;
-	struct s_clst	*prec;
+	int				opcode;
+	int				ocparam;
+	int				nb_arg;
+	int				arg[3];
+	int				arg_type[3];
 	struct s_clst	*next;
 };
 
@@ -98,6 +100,7 @@ struct s_asm
 	int			arg_type[3]; // types of arguments 1 == reg, 2 == dir, 3 == ind
 	int			label_in_arg[3]; // which arg has a label
 	char		*labels[3]; // label names in arg
+	t_clst		*begin;
 };
 
 typedef struct s_asm t_asm;
@@ -140,5 +143,8 @@ void	toggle_endianess(int *n);
 int		asm_bigendian(int number, int size);
 void	asm_dellabel(t_asm *data);
 void	asm_reinit_data(t_asm **data);
+
+void	asm_destroy_corlist(t_asm *data);
+int		asm_create_corlist(t_asm *data);
 
 #endif

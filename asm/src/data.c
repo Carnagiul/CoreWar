@@ -17,15 +17,8 @@ void	asm_reinit_data(t_asm **data)
 	int	i;
 
 	i = 0;
-	ft_bzero((*data)->arg, 3);
-	ft_bzero((*data)->arg_type, 3);
-	// while ((*data)->arg[i] < 3)
-	// {
-	// 	(*data)->arg_type[i] = 0;
-	// 	(*data)->arg[i] = 0;
-	// 	++i;
-	// }
-	//asm_dellabel((*data));
+	ft_bzero((*data)->arg, sizeof(int) * 3);
+	ft_bzero((*data)->arg_type, sizeof(int) * 3);
 	(*data)->ocp = 0;
 	(*data)->cmd = 0;
 	(*data)->nb_arg = 0;
@@ -46,14 +39,15 @@ t_asm	*asm_init_data(void)
 	}
 	ft_bzero(data->header->prog_name, PROG_NAME_LENGTH + 1);
 	ft_bzero(data->header->comment, COMMENT_LENGTH + 1);
-	ft_bzero(data->arg_type, 3);
-	ft_bzero(data->arg, 3);
+	ft_bzero(data->arg_type, sizeof(int) * 3);
+	ft_bzero(data->arg, sizeof(int) * 3);
 	data->str = NULL;
 	data->lst = NULL;
 	data->error_char = NULL;
 	data->lname = ft_strlen(NAME_CMD_STRING);
 	data->lcom = ft_strlen(COMMENT_CMD_STRING);
 	asm_get_optab(data);
+	data->begin = NULL;
 	return (data);
 }
 

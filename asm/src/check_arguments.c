@@ -46,6 +46,7 @@ int		asm_checkdir(char *line, int begin, t_asm *data, int nb_arg)
 	if ((line + begin)[i] == LABEL_CHAR)
 	{
 		i = asm_checklabelarg(line, begin + 1 + i, data, nb_arg);
+		data->arg_type[nb_arg] = 2;
 		return (i == -1 ? i : i + 2);
 	}
 	if ((line + begin)[i] == '-')
@@ -59,7 +60,7 @@ int		asm_checkdir(char *line, int begin, t_asm *data, int nb_arg)
 	nb = ft_atoi((line + begin) + 1);
 	(line + begin)[i] = c;
 	data->arg[nb_arg] = nb;
-	data->arg_type[nb_arg] = T_DIR;
+	data->arg_type[nb_arg] = 2;
 	return (i);
 }
 
@@ -73,6 +74,7 @@ int		asm_checkind(char *line, int begin, t_asm *data, int nb_arg)
 	if ((line + begin)[i] == LABEL_CHAR)
 	{
 		i = asm_checklabelarg(line, begin + 1, data, nb_arg);
+		data->arg_type[nb_arg] = 3;
 		if (i == -1)
 			return (-1);
 		return (i + 1);
@@ -90,7 +92,7 @@ int		asm_checkind(char *line, int begin, t_asm *data, int nb_arg)
 	nb = ft_atoi((line + begin));
 	(line + begin)[i] = c;
 	data->arg[nb_arg] = nb;
-	data->arg_type[nb_arg] = T_IND;
+	data->arg_type[nb_arg] = 3;
 	return (i);
 }
 
@@ -116,6 +118,6 @@ int		asm_checkreg(char *line, int begin, int nb_arg, t_asm *data)
 	if (nb > REG_NUMBER || nb < 1)
 		asm_parse_file_error(data, &line, NULL);
 	data->arg[nb_arg] = nb;
-	data->arg_type[nb_arg] = T_REG;
+	data->arg_type[nb_arg] = 1;
 	return ((nb > REG_NUMBER || nb < 1) ? -1 : i);
 }

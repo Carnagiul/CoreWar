@@ -6,12 +6,15 @@ void	asm_set_corlist(t_asm *data, t_clst **new)
 
 	(*new)->opcode = data->cmd;
 	(*new)->nb_arg = data->nb_arg;
-	(*new)->ocparam = data->ocp;
+	(*new)->ocparam = 0;
+	(*new)->pc = data->nb_arg + (data->op_tab[data->cmd].ocp == 1 ? 2 : 1);
 	i = -1;
 	while (++i < 3)
 	{
 		(*new)->arg[i] = data->arg[i];
 		(*new)->arg_type[i] = data->arg_type[i];
+		(*new)->ocparam |= data->arg_type[i];
+		(*new)->ocparam <<= 2;
 	}
 }
 

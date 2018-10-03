@@ -58,6 +58,8 @@ int		main(int ac, char **av)
 	int		i;
 
 	i = 0;
+	if (ac == 1)
+		asm_error(NO_FILE, NULL, NULL);
 	while (++i < ac)
 	{
 		data = NULL;

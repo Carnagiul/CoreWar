@@ -69,6 +69,7 @@ struct s_clst
 	int				nb_arg;
 	int				arg[3];
 	int				arg_type[3];
+	int			 	pc;
 	struct s_clst	*next;
 };
 

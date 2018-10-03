@@ -1,1 +1,0 @@
-alias gdb-peda="gdb -x $HOME/peda/peda.py"

@@ -1,1 +1,0 @@
-gcc asm.c data.c parse.c -I ../libft/includes -I . -L ../libft/ -lft

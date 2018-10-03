@@ -144,6 +144,7 @@ int		asm_bigendian(int number, int size);
 void	asm_dellabel(t_asm *data);
 void	asm_reinit_data(t_asm **data);
 
+void	asm_set_corlist(t_asm *data, t_clst **new);
 void	asm_destroy_corlist(t_asm *data);
 int		asm_create_corlist(t_asm *data);
 

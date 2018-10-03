@@ -1,21 +1,30 @@
 #include <asm.h>
 
+void	asm_set_corlist(t_asm *data, t_clst **new)
+{	
+	int		i;
+
+	(*new)->opcode = data->cmd;
+	(*new)->nb_arg = data->nb_arg;
+	(*new)->ocparam = data->ocp;
+	i = -1;
+	while (++i < 3)
+	{
+		(*new)->arg[i] = data->arg[i];
+		(*new)->arg_type[i] = data->arg_type[i];
+	}
+}
+
 int		asm_create_corlist(t_asm *data)
 {
 	t_clst	*new;
 	t_clst	*tmp;
 
 	new = NULL;
-	new = (t_clst *)malloc(sizeof(t_clst));
 	data->error_type = MFAIL;
-	if (!new)
+	if (!(new = (t_clst *)malloc(sizeof(t_clst))))
 		return (asm_parse_file_error(data, NULL, NULL));
-	new->opcode = data->cmd;
-	new->nb_arg = data->nb_arg;
-	new->ocparam = 0;
-	new->arg[0] = data->arg[0];
-	new->arg[1] = data->arg[1];
-	new->arg[2] = data->arg[2];
+	asm_set_corlist(data, &new);
 	new->next = NULL;
 	if (data->begin == NULL)
 	{
@@ -25,10 +34,9 @@ int		asm_create_corlist(t_asm *data)
 	}
 	tmp = data->begin;
 	while (tmp && tmp->next)
-	{
 		tmp = tmp->next;
-	}
 	tmp->next = new;
+	tmp->next->next = NULL;
 	return (1);
 }
 
@@ -47,4 +55,5 @@ void	asm_destroy_corlist(t_asm *data)
 	}
 	free(lst);
 	lst = NULL;
+	data->begin = NULL;
 }

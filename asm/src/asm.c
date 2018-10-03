@@ -48,6 +48,7 @@ int		asm_verify_format(t_asm *data)
 	}
 	data->line_error = 0;
 	asm_parse_file(data);
+	asm_destroy_corlist(data);
 	return (0);
 }
 
